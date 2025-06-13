@@ -171,23 +171,50 @@ void	check_info(char *info, char *info_type, t_map *map)
 		check_info_color(info, map);
 }
 
-char	*get_info(char *info_type, char *element, t_map *map)
+int skip_whitespace(char *str, int *i)
 {
-	int 	i;
-	char	*info;
+	int count = 0;
+	while (str[*i] == ' ' || (str[*i] >= 9 && str[*i] <= 13))
+	{
+		(*i)++;
+		count++;
+	}
+	return count;
+}
 
-	i = 0;
-	while (element[i] == ' ' || (element[i] >= 9 && element[i] <= 13))
-		i++;
+void skip_id_prefix(char *info_type, int *i)
+{
 	if (ft_strncmp(info_type, "texture", 8) == 0)
-		i += 2;
+		*i += 2;
 	else if (ft_strncmp(info_type, "color", 6) == 0)
-		i += 1;
-	while (element[i] == ' ' || (element[i] >= 9 && element[i] <= 13))
-		i++;
-	info = ft_substr(element, i, ft_strlen(element) - i - 2);						//-2 because of \r\n in the end, but see if i should do another safer way
+		*i += 1;
+}
+
+void skip_word(char *str, int *i)
+{
+	while (str[*i] && str[*i] != ' ' && (str[*i] < 9 || str[*i] > 13))
+		(*i)++;
+}
+
+
+char *get_info(char *info_type, char *element, t_map *map)
+{
+	int i = 0;
+	int start_index;
+	int	trailing_spaces;
+	char *info;
+
+	skip_whitespace(element, &i);
+	skip_id_prefix(info_type, &i);
+	skip_whitespace(element, &i);
+	start_index = i;
+	skip_word(element, &i);
+	trailing_spaces = skip_whitespace(element, &i);
+	if (element[i] && element[i] != ' ' && (element[i] < 9 || element[i] > 13))
+		error_exit("Invalid path of texture", map);
+	info = ft_substr(element, start_index, ft_strlen(element) - start_index - trailing_spaces);
 	check_info(info, info_type, map);
-	return (info);
+	return info;
 }
 
 int	check_elem_id(t_map *map, char *element)
@@ -207,24 +234,24 @@ int	check_elem_id(t_map *map, char *element)
 	else if (ft_strncmp(element, "\r\n", 2) == 0)
 		return (0);
 	else
-		error_exit("Wrong element type", map);
+		error_exit("Wrong/missing element type", map);
 	return (1);
 } 
 
 int	elem_is_unique(t_map *map, char *element)
 {
-	if (ft_strncmp(element, "NO", 3) == 0 && map->no)
-		printf("Error\nRepeated element NO\n");
-	else if (ft_strncmp(element, "SO", 3) == 0 && map->so)
-		printf("Error\nRepeated element SO\n");
-	else if (ft_strncmp(element, "WE", 3) == 0 && map->we)
-		printf("Error\nRepeated element WE\n");
-	else if (ft_strncmp(element, "EA", 3) == 0 && map->ea)
-		printf("Error\nRepeated element EA\n");
-	else if (ft_strncmp(element, "F", 2) == 0 && map->f)
-		printf("Error\nRepeated element F\n");
-	else if (ft_strncmp(element, "C", 2) == 0 && map->c)
-		printf("Error\nRepeated element C\n");
+	if (ft_strncmp(element, "NO ", 3) == 0 && map->no)
+		error_exit("Repeated element NO", map);
+	else if (ft_strncmp(element, "SO ", 3) == 0 && map->so)
+		error_exit("Repeated element SO", map);
+	else if (ft_strncmp(element, "WE ", 3) == 0 && map->we)
+		error_exit("Repeated element WE", map);
+	else if (ft_strncmp(element, "EA ", 3) == 0 && map->ea)
+		error_exit("Repeated element EA", map);
+	else if (ft_strncmp(element, "F ", 2) == 0 && map->f)
+		error_exit("Repeated element F", map);
+	else if (ft_strncmp(element, "C ", 2) == 0 && map->c)
+		error_exit("Repeated element C", map);
 	else
 		return (1);
 	return (0);
