@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   parsing.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: bde-luce <bde-luce@student.42.fr>          +#+  +:+       +#+        */
+/*   By: frteixei <frteixei@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/13 12:30:05 by bde-luce          #+#    #+#             */
-/*   Updated: 2026/01/06 20:07:41 by bde-luce         ###   ########.fr       */
+/*   Updated: 2026/01/07 17:00:35 by frteixei         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -593,29 +593,4 @@ void	map_validate(t_cub3d *cub3d)
 	get_map(i, cub3d);
 	print_map(cub3d);
 	validate_map(cub3d);
-}
-
-void	init_map(t_cub3d *cub3d)
-{
-	cub3d->file = NULL;
-	cub3d->map = NULL;
-	cub3d->rows = 0;
-	cub3d->no = NULL;
-	cub3d->so = NULL;
-	cub3d->we = NULL;
-	cub3d->ea = NULL;
-	cub3d->f = NULL;
-	cub3d->c = NULL;
-}
-
-int	main(int argc, char **argv)
-{
-	t_cub3d	cub3d;
-	if (argc == 2)
-	{
-		init_map(&cub3d);
-		file_convert(&cub3d, argv);
-		map_validate(&cub3d);
-		free_all(&cub3d);
-	}
 }

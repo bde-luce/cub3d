@@ -13,7 +13,7 @@
 NAME = cub3D
 
 SRC_DIR = src
-SRCS = parsing.c
+SRCS = parsing.c main.c mlx_init.c
 SRC  = $(addprefix $(SRC_DIR)/, $(SRCS))
 
 OBJ_DIR = obj
@@ -22,11 +22,15 @@ OBJS = $(SRC:$(SRC_DIR)/%.c=$(OBJ_DIR)/%.o)
 CC = @cc
 CFLAGS = -Wall -Wextra -Werror -g -fsanitize=address
 
+MLX_DIR = mlx_linux
+MLX_LIB = $(MLX_DIR)/libmlx_Linux.a
+MLX_FLAGS = -L$(MLX_DIR) -lmlx_Linux -lXext -lX11 -lm -lz
+
 INC_DIR = inc
 LIBFT_DIR = $(SRC_DIR)/libft
 LIBFT = $(LIBFT_DIR)/libft.a
 
-INCLUDES = -I$(INC_DIR) -I$(LIBFT_DIR) -I/usr/include
+INCLUDES = -I$(INC_DIR) -I$(LIBFT_DIR) -I$(MLX_DIR) -I/usr/include
 
 RM = @rm -rf
 
@@ -42,7 +46,7 @@ all: $(NAME)
 
 $(NAME): $(OBJS) $(LIBFT)
 	$(MSG_BUILD)
-	$(CC) $(CFLAGS) -o $@ $(OBJS) $(LIBFT)
+	$(CC) $(CFLAGS) -o $@ $(OBJS) $(LIBFT) $(MLX_LIB) $(MLX_FLAGS)
 	$(MSG_DONE)
 
 $(LIBFT):
