@@ -12,40 +12,66 @@
 
 NAME = cub3D
 
-OBJ_DIR = obj
-
+SRC_DIR = src
 SRCS = parsing.c
+SRC  = $(addprefix $(SRC_DIR)/, $(SRCS))
 
-OBJS = $(SRCS:%.c=$(OBJ_DIR)/%.o)
+OBJ_DIR = obj
+OBJS = $(SRC:$(SRC_DIR)/%.c=$(OBJ_DIR)/%.o)
 
-INCLUDES = -I/usr/include -I$(LIBFT_DIR)
+CC = @cc
+CFLAGS = -Wall -Wextra -Werror -g -fsanitize=address
 
-CC = cc
-CFLAGS = -Wall -Wextra -Werror -g
-RM = rm -rf
+INC_DIR = inc
+LIBFT_DIR = $(SRC_DIR)/libft
+LIBFT = $(LIBFT_DIR)/libft.a
 
-LIBFT_DIR = ./libft
-LIBFT = ./libft/libft.a
+INCLUDES = -I$(INC_DIR) -I$(LIBFT_DIR) -I/usr/include
+
+RM = @rm -rf
+
+# Pretty messages (1 line)
+MSG_BUILD   = @echo "🔨 Building $(NAME)..."
+MSG_DONE    = @echo "✅ Done"
+MSG_CLEAN   = @echo "🧹 Cleaning objects..."
+MSG_FCLEAN  = @echo "🧼 Full clean..."
+MSG_RE      = @echo "🔁 Rebuilding..."
 
 
 all: $(NAME)
 
-$(NAME): $(OBJS)
-	$(MAKE) -C $(LIBFT_DIR)
-	$(CC) $(CFLAGS) -o $(NAME) $(OBJS) $(LIBFT)
+$(NAME): $(OBJS) $(LIBFT)
+	$(MSG_BUILD)
+	$(CC) $(CFLAGS) -o $@ $(OBJS) $(LIBFT)
+	$(MSG_DONE)
 
-$(OBJ_DIR)/%.o: %.c
+$(LIBFT):
+	@echo "📚 Building libft..."
+	@$(MAKE) -s -C $(LIBFT_DIR)
+
+$(OBJ_DIR):
 	@mkdir -p $(OBJ_DIR)
-	$(CC) $(CFLAGS) -c $< -o $@ $(INCLUDES)
+
+$(OBJ_DIR)/%.o: $(SRC_DIR)/%.c | $(OBJ_DIR)
+	@echo "🧱 Compiling $<"
+	$(CC) $(CFLAGS) $(INCLUDES) -c -o $@ $<
 
 clean:
-	$(MAKE) clean -C $(LIBFT_DIR)
+	$(MSG_CLEAN)
+	@$(MAKE) -s clean -C $(LIBFT_DIR)
 	$(RM) $(OBJ_DIR)
+	$(MSG_DONE)
 
 fclean: clean
-	$(MAKE) fclean -C $(LIBFT_DIR)
+	$(MSG_FCLEAN)
+	@$(MAKE) -s fclean -C $(LIBFT_DIR)
 	$(RM) $(NAME)
+	$(MSG_DONE)
 
-re: fclean all
+re:
+	$(MSG_RE)
+	@$(MAKE) -s fclean -C $(LIBFT_DIR)
+	$(RM) $(OBJ_DIR) $(NAME)
+	@$(MAKE) -s all
 
 .PHONY: all clean fclean re

@@ -16,11 +16,9 @@
 # include <fcntl.h>
 # include <stdio.h>
 # include <stdlib.h>
-# include "libft/libft.h"
+# include "../src/libft/libft.h"
 
-struct	s_data;
-
-typedef struct s_map
+typedef struct s_cub3d
 {
 	char	**file;
 	char	**map;
@@ -32,6 +30,6 @@ typedef struct s_map
 	char	*f;
 	char	*c;
 	int		nbr_elem;
-}	t_map;
+}	t_cub3d;
 
 #endif
