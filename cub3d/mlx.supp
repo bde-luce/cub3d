@@ -1,0 +1,57 @@
+{
+   mlx
+   Memcheck:Leak
+   ...
+   fun:malloc
+   ...
+   obj:*/libmlx*
+}
+{
+   mlx_x11
+   Memcheck:Leak
+   ...
+   obj:*/libX11*
+}
+{
+   mlx_ext
+   Memcheck:Leak
+   ...
+   obj:*/libXext*
+}
+{
+   mlx_image_alloc
+   Memcheck:Leak
+   match-leak-kinds: reachable
+   fun:calloc
+   fun:mlx_int_new_xshm_image
+   fun:mlx_new_image
+}
+{
+   x11_writev_uninit
+   Memcheck:Param
+   writev(vector[...])
+   ...
+   obj:*/libxcb.so*
+   ...
+   obj:*/libX11.so*
+}
+{
+   x11_uninit_bytes
+   Memcheck:Param
+   writev(vector[0])
+   fun:writev
+   ...
+   obj:*/libxcb.so*
+}
+{
+   mlx_anti_resize
+   Memcheck:Value8
+   ...
+   fun:mlx_int_anti_resize_win
+}
+{
+   mlx_anti_resize_uninit
+   Memcheck:Cond
+   ...
+   fun:mlx_int_anti_resize_win
+}

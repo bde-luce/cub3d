@@ -12,35 +12,35 @@
 
 NAME = cub3D
 
+# Directories
 SRC_DIR = src
-SRCS = parsing.c main.c mlx_init.c
-SRC  = $(addprefix $(SRC_DIR)/, $(SRCS))
-
 OBJ_DIR = obj
-OBJS = $(SRC:$(SRC_DIR)/%.c=$(OBJ_DIR)/%.o)
-
-CC = @cc
-CFLAGS = -Wall -Wextra -Werror -g -fsanitize=address
-
+INC_DIR = inc
+LIBFT_DIR = $(SRC_DIR)/libft
 MLX_DIR = mlx_linux
+
+# Automatically find all .c files recursively
+SRC = $(shell find $(SRC_DIR) -name '*.c')
+
+# Convert src/.../*.c → obj/.../*.o
+OBJS = $(patsubst $(SRC_DIR)/%.c,$(OBJ_DIR)/%.o,$(SRC))
+
+# Libraries
+LIBFT = $(LIBFT_DIR)/libft.a
 MLX_LIB = $(MLX_DIR)/libmlx_Linux.a
 MLX_FLAGS = -L$(MLX_DIR) -lmlx_Linux -lXext -lX11 -lm -lz
 
-INC_DIR = inc
-LIBFT_DIR = $(SRC_DIR)/libft
-LIBFT = $(LIBFT_DIR)/libft.a
-
+# Compiler
+CC = @cc
+CFLAGS = -Wall -Wextra -Werror -g
 INCLUDES = -I$(INC_DIR) -I$(LIBFT_DIR) -I$(MLX_DIR) -I/usr/include
 
-RM = @rm -rf
-
-# Pretty messages (1 line)
+# Pretty messages
 MSG_BUILD   = @echo "🔨 Building $(NAME)..."
-MSG_DONE    = @echo "✅ Done"
+MSG_DONE	= @echo "✅ Done"
 MSG_CLEAN   = @echo "🧹 Cleaning objects..."
 MSG_FCLEAN  = @echo "🧼 Full clean..."
-MSG_RE      = @echo "🔁 Rebuilding..."
-
+MSG_RE	  = @echo "🔁 Rebuilding..."
 
 all: $(NAME)
 
@@ -53,29 +53,27 @@ $(LIBFT):
 	@echo "📚 Building libft..."
 	@$(MAKE) -s -C $(LIBFT_DIR)
 
-$(OBJ_DIR):
-	@mkdir -p $(OBJ_DIR)
-
-$(OBJ_DIR)/%.o: $(SRC_DIR)/%.c | $(OBJ_DIR)
+$(OBJ_DIR)/%.o: $(SRC_DIR)/%.c
+	@mkdir -p $(dir $@)
 	@echo "🧱 Compiling $<"
 	$(CC) $(CFLAGS) $(INCLUDES) -c -o $@ $<
 
 clean:
 	$(MSG_CLEAN)
 	@$(MAKE) -s clean -C $(LIBFT_DIR)
-	$(RM) $(OBJ_DIR)
+	@rm -rf $(OBJ_DIR)
 	$(MSG_DONE)
 
 fclean: clean
 	$(MSG_FCLEAN)
 	@$(MAKE) -s fclean -C $(LIBFT_DIR)
-	$(RM) $(NAME)
+	@rm -rf $(NAME)
 	$(MSG_DONE)
 
 re:
 	$(MSG_RE)
 	@$(MAKE) -s fclean -C $(LIBFT_DIR)
-	$(RM) $(OBJ_DIR) $(NAME)
+	@rm -rf $(OBJ_DIR) $(NAME)
 	@$(MAKE) -s all
 
 .PHONY: all clean fclean re
