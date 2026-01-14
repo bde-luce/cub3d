@@ -18,7 +18,7 @@ static int	line_is_empty(char *str)
 
 	i = 0;
 	skip_hwhitespace(str, &i);
-	if (str[i] == '\n')
+	if (str[i] == '\n' || str[i] == '\r')
 		return (1);
 	return (0);
 }
@@ -48,7 +48,7 @@ void	get_map(int i, t_config *config)
 		error_exit("Problem in memory allocation", config);
 	while (config->file[i] != NULL && !line_is_empty(config->file[i]))
 	{
-		config->map[j] = ft_strtrim(config->file[i], "\n");
+		config->map[j] = ft_strtrim(config->file[i], "\n\r");
 		j++;
 		i++;
 	}

@@ -42,7 +42,7 @@ static void	check_elem_id_2(t_config *config, char *elem)
 			error_exit("Repeated element C", config);
 		config->c = get_info(i + 1, "color", elem, config);
 	}
-	else if (elem[i] != '\n' && elem[i] != '\0')
+	else if (elem[i] != '\n' && elem[i] != '\r' && elem[i] != '\0')
 		error_exit("Wrong/missing element type", config);
 }
 
