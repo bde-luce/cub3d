@@ -1,13 +1,13 @@
 #include "../inc/cub3d.h"
 
-int	key_press(int keycode, t_cub3d *cub3d)
+int	key_press(int keycode, t_config *config)
 {
-	t_player *player = &cub3d->game.player;
+	t_player *player = &config->game.player;
 	
 	if (keycode == 65307)
 	{
-		cleanup_mlx(cub3d);
-		free_all(cub3d);
+		cleanup_mlx(config);
+		free_config(config);
 		exit(0);
 	}
 	if (keycode == W)
@@ -25,9 +25,9 @@ int	key_press(int keycode, t_cub3d *cub3d)
 	return (0);
 }
 
-int	key_release(int keycode, t_cub3d *cub3d)
+int	key_release(int keycode, t_config *config)
 {
-	t_player *player = &cub3d->game.player;
+	t_player *player = &config->game.player;
 	
 	if (keycode == W)
 		player->key_up = false;
@@ -46,13 +46,13 @@ int	key_release(int keycode, t_cub3d *cub3d)
 
 int	handle_key(int keycode, void *param)
 {
-	t_cub3d	*cub3d;
+	t_config	*config;
 
-	cub3d = (t_cub3d *)param;
+	config = (t_config *)param;
 	if (keycode == 65307)
 	{
-		cleanup_mlx(cub3d);
-		free_all(cub3d);
+		cleanup_mlx(config);
+		free_config(config);
 		exit(0);
 	}
 	return (0);
@@ -60,11 +60,11 @@ int	handle_key(int keycode, void *param)
 
 int	handle_close(void *param)
 {
-	t_cub3d	*cub3d;
+	t_config	*config;
 
-	cub3d = (t_cub3d *)param;
-	cleanup_mlx(cub3d);
-	free_all(cub3d);
+	config = (t_config *)param;
+	cleanup_mlx(config);
+	free_config(config);
 	exit(0);
 	return (0);
 }

@@ -1,43 +1,43 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   mlx_init.c                                         :+:      :+:    :+:   */
+/*   init.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: frteixei <frteixei@student.42.fr>          +#+  +:+       +#+        */
+/*   By: bde-luce <bde-luce@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/07 16:46:58 by frteixei          #+#    #+#             */
-/*   Updated: 2026/01/09 19:33:41 by frteixei         ###   ########.fr       */
+/*   Updated: 2026/01/14 15:34:25 by bde-luce         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../inc/cub3d.h"
 
-void find_player_position(t_cub3d *cub3d)
+void find_player_position(t_config *config)
 {
     int i, j;
     
     i = 0;
-    while (cub3d->map[i])
+    while (config->map[i])
     {
         j = 0;
-        while (cub3d->map[i][j])
+        while (config->map[i][j])
         {
-            if (cub3d->map[i][j] == 'N' || cub3d->map[i][j] == 'S' ||
-                cub3d->map[i][j] == 'E' || cub3d->map[i][j] == 'W')
+            if (config->map[i][j] == 'N' || config->map[i][j] == 'S' ||
+                config->map[i][j] == 'E' || config->map[i][j] == 'W')
             {
                 // Store player position in map coordinates
-                cub3d->game.player.x = j * BLOCK + BLOCK / 2;
-                cub3d->game.player.y = i * BLOCK + BLOCK / 2;
+                config->game.player.x = j * BLOCK + BLOCK / 2;
+                config->game.player.y = i * BLOCK + BLOCK / 2;
                 
                 // Set angle based on direction
-                if (cub3d->map[i][j] == 'N')
-                    cub3d->game.player.angle = 3 * PI / 2; // Up
-                else if (cub3d->map[i][j] == 'S')
-                    cub3d->game.player.angle = PI / 2;     // Down
-                else if (cub3d->map[i][j] == 'E')
-                    cub3d->game.player.angle = 0;          // Right
-                else if (cub3d->map[i][j] == 'W')
-                    cub3d->game.player.angle = PI;         // Left
+                if (config->map[i][j] == 'N')
+                    config->game.player.angle = 3 * PI / 2; // Up
+                else if (config->map[i][j] == 'S')
+                    config->game.player.angle = PI / 2;     // Down
+                else if (config->map[i][j] == 'E')
+                    config->game.player.angle = 0;          // Right
+                else if (config->map[i][j] == 'W')
+                    config->game.player.angle = PI;         // Left
                 return;
             }
             j++;
@@ -57,10 +57,10 @@ void	init_player(t_player *player)
 	player->right_rotate = false;
 }
 
-void init_game(t_game *game, t_cub3d *cub3d)
+void init_game(t_game *game, t_config *config)
 {
 	init_player(&game->player);
-	game->map = cub3d->map;
+	game->map = config->map;
 	game->mlx = mlx_init();
 	if (!game->mlx)
 		exit(1);

@@ -54,7 +54,7 @@ typedef struct s_game
 	t_player	player;
 }	t_game;
 
-typedef struct s_cub3d
+typedef struct s_config
 {
 	char	**file;
 	char	**map;
@@ -66,21 +66,21 @@ typedef struct s_cub3d
 	char	*f;
 	char	*c;
 	t_game	game;
-}	t_cub3d;
+}	t_config;
 
 // INIT
-void	init_cub3d(t_cub3d *cub3d);
+void	init_config(t_config *config);
 void	init_player(t_player *player);
-void	init_game(t_game *game, t_cub3d *cub3d);
-void	find_player_position(t_cub3d *cub3d);
+void	init_game(t_game *game, t_config *config);
+void	find_player_position(t_config *config);
 
 // MLX_UTILS
 int		rgb_to_int(char *rgb);
-void	cleanup_mlx(t_cub3d *cub3d);
+void	cleanup_mlx(t_config *config);
 
 // HOOKS
-int		key_press(int keycode, t_cub3d *cub3d);
-int		key_release(int keycode, t_cub3d *cub3d);
+int		key_press(int keycode, t_config *config);
+int		key_release(int keycode, t_config *config);
 int		handle_key(int keycode, void *param);
 int		handle_close(void *param);
 
@@ -105,51 +105,38 @@ int		draw_loop(t_game *game);
 void	draw_line(t_player *player, t_game *game, float start_x, int i, int scale);
 
 // PARSING
+// PARSING CONFIG
+void	free_arr(char **arr);
+void	free_config(t_config *config);
+void	error_exit(char *str, t_config *config);
+void	init_config(t_config *config);
+
 // PARSING FILE
-void	free_all(t_cub3d *cub3d);
-void	file_convert(t_cub3d *cub3d, char **argv);
-void	print_file(t_cub3d *cub3d);
+void	file_convert(t_config *config, char **argv);
 
 // PARSING ELEMENTS
-void	skip_id_prefix(char *info_type, int *i);
-char	*get_info(char *info_type, char *element, t_cub3d *cub3d);
-int		check_elem_id(t_cub3d *cub3d, char *element);
-void	check_info(char *info, char *info_type, t_cub3d *cub3d);
-void	validate_elements(int *i, t_cub3d *cub3d);
-
-// PARSING COLORS
-int		check_color_range(char *color);
-void	check_info_color(char *info, t_cub3d *cub3d);
-int		count_commas(char *s);
-
-// PARSING MAP CHECKS
-void	check_char_is_valid(t_cub3d *cub3d);
-void	check_only_1player(t_cub3d *cub3d);
-int		is_player_or_zero(char c);
-void	check_1st_and_last_line(t_cub3d *cub3d);
-void	check_middle(t_cub3d *cub3d);
-void	check_map_is_closed(t_cub3d *cub3d);
-void	validate_map(t_cub3d *cub3d);
+char	*get_info(int i, char *info_type, char *elem, t_config *config);
+void	validate_elements(int *i, t_config *config);
 
 // PARSING MAP
-int		line_is_empty(char *str);
-int		nbr_rows(int i, t_cub3d *cub3d);
-void	get_map(int i, t_cub3d *cub3d);
-void	print_map(t_cub3d *cub3d);
+void	get_map(int i, t_config *config);
 
-// PARSING UTILITIES
-void	free_arr(char **arr);
-int		arr_len(char **arr);
-int		str_isdigit(char *str);
+//PARSING MAPCHECK
+void	check_map_is_closed(t_config *config);
+void	check_only_1player(t_config *config);
+
+// PARSING PIPELINE
+void	map_validate(t_config *config);
+
+// PARSING UTILS
 int		is_hws(char c);
-int		is_ws(char c);
-int		skip_hwhitespace(char *str, int *i);
+int		arr_len(char **arr);
 void	skip_pos_signal(char *str, int *i);
-void	skip_word(char *str, int *i);
+int		skip_hwhitespace(char *str, int *i);
 int		count_trailing_ws(char *str);
 
-// PARSING
-void	error_exit(char *str, t_cub3d *cub3d);
-void	map_validate(t_cub3d *cub3d);
+
+void	print_file(t_config *config);
+void	print_map(t_config *config);
 
 #endif

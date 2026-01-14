@@ -6,7 +6,7 @@
 /*   By: bde-luce <bde-luce@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/18 16:12:25 by bde-luce          #+#    #+#             */
-/*   Updated: 2024/09/24 15:03:22 by bde-luce         ###   ########.fr       */
+/*   Updated: 2026/01/14 15:36:47 by bde-luce         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -95,17 +95,3 @@ char	*get_next_line(int fd)
 	rest = get_rest(rest);
 	return (line);
 }
-
-/*int	main(void)
-{
-	int		fd;
-	char	*str;
-
-	fd = open("text.txt", O_RDONLY);
-	//fd = 42;
-	while ((str = get_next_line(fd)))
-	{
-		printf("%s", str);
-		free(str);
-	}
-}*/

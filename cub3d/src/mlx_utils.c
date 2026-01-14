@@ -20,15 +20,15 @@ int rgb_to_int(char *rgb)
     return (color);
 }
 
-void	cleanup_mlx(t_cub3d *cub3d)
+void	cleanup_mlx(t_config *config)
 {
-	if (cub3d->game.img)
-		mlx_destroy_image(cub3d->game.mlx, cub3d->game.img);
-	if (cub3d->game.win)
-		mlx_destroy_window(cub3d->game.mlx, cub3d->game.win);
-	if (cub3d->game.mlx)
+	if (config->game.img)
+		mlx_destroy_image(config->game.mlx, config->game.img);
+	if (config->game.win)
+		mlx_destroy_window(config->game.mlx, config->game.win);
+	if (config->game.mlx)
 	{
-		mlx_destroy_display(cub3d->game.mlx);
-		free(cub3d->game.mlx);
+		mlx_destroy_display(config->game.mlx);
+		free(config->game.mlx);
 	}
 }
