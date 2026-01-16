@@ -26,6 +26,36 @@
 
 # define DEBUG 0
 
+typedef struct s_tex
+{
+	void	*img;
+	char	*data;
+	int		bpp;
+	int		size_line;
+	int		endian;
+	int		width;
+	int		height;
+}	t_tex;
+
+typedef struct s_hit
+{
+	// Ray info
+	float	ray_x;
+	float	ray_y;
+	float	dir_x;
+	float	dir_y;
+	int		side;
+
+	// Texture info
+	t_tex	*tex;
+	int		tex_x;
+
+	// Render info
+	int		screen_x;
+	int		top;
+	int		bottom;
+}	t_hit;
+
 typedef struct s_player
 {
 	float	x;
@@ -41,16 +71,20 @@ typedef struct s_player
 
 typedef struct s_game
 {
-	void	*mlx;
-	void	*win;
-	void	*img;
-	char	*data;
-	int		bpp;
-	int		size_line;
-	int		endian;
-	char	**map;
-	int		floor_color;
-	int		ceiling_color;
+	void		*mlx;
+	void		*win;
+	void		*img;
+	char		*data;
+	int			bpp;
+	int			size_line;
+	int			endian;
+	char		**map;
+	int			floor_color;
+	int			ceiling_color;
+	t_tex		no;
+	t_tex		so;
+	t_tex		we;
+	t_tex		ea;
 	t_player	player;
 }	t_game;
 
@@ -69,8 +103,8 @@ typedef struct s_config
 }	t_config;
 
 // INIT
-void	init_config(t_config *config);
-void	init_player(t_player *player);
+// void	init_config(t_config *config);
+// void	init_player(t_player *player);
 void	init_game(t_game *game, t_config *config);
 void	find_player_position(t_config *config);
 

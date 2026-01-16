@@ -51,6 +51,26 @@ static int	check_color_range(char *color)
 	return (1);
 }
 
+// int rgb_to_int(char *rgb)
+// {
+//     char **c;
+//     int r, g, b;
+//     int color;
+
+//     c = ft_split(rgb, ',');
+//     if (!c)
+//         return (-1);
+
+//     r = ft_atoi(c[0]);
+//     g = ft_atoi(c[1]);
+//     b = ft_atoi(c[2]);
+
+//     free_arr(c);
+
+//     color = (r << 16) | (g << 8) | b;
+//     return (color);
+// }
+
 static void	check_info_color(char *info, t_config *config)
 {
 	char	**rgb;

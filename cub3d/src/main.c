@@ -6,7 +6,7 @@
 /*   By: bde-luce <bde-luce@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/07 16:54:22 by frteixei          #+#    #+#             */
-/*   Updated: 2026/01/14 15:32:53 by bde-luce         ###   ########.fr       */
+/*   Updated: 2026/01/15 13:13:00 by bde-luce         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,7 +23,6 @@ int	main(int argc, char **argv)
 	}
 
 	ft_bzero(&config, sizeof(t_config));
-	init_config(&config);
 
 	file_convert(&config, argv);
 	map_validate(&config);

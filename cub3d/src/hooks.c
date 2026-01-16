@@ -66,5 +66,4 @@ int	handle_close(void *param)
 	cleanup_mlx(config);
 	free_config(config);
 	exit(0);
-	return (0);
 }

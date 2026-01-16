@@ -52,15 +52,15 @@ void	error_exit(char *str, t_config *config)
 	exit(1);
 }
 
-void	init_config(t_config *config)
-{
-	config->file = NULL;
-	config->map = NULL;
-	config->rows = 0;
-	config->no = NULL;
-	config->so = NULL;
-	config->we = NULL;
-	config->ea = NULL;
-	config->f = NULL;
-	config->c = NULL;
-}
+// void	init_config(t_config *config)
+// {
+// 	config->file = NULL;
+// 	config->map = NULL;
+// 	config->rows = 0;
+// 	config->no = NULL;
+// 	config->so = NULL;
+// 	config->we = NULL;
+// 	config->ea = NULL;
+// 	config->f = NULL;
+// 	config->c = NULL;
+// }

@@ -6,7 +6,7 @@
 /*   By: bde-luce <bde-luce@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/07 16:46:58 by frteixei          #+#    #+#             */
-/*   Updated: 2026/01/14 15:34:25 by bde-luce         ###   ########.fr       */
+/*   Updated: 2026/01/15 17:50:44 by bde-luce         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,24 +46,39 @@ void find_player_position(t_config *config)
     }
 }
 
-void	init_player(t_player *player)
-{
-	player->key_up = false;
-	player->key_down = false;
-	player->key_left = false;
-	player->key_right = false;
+// void	init_player(t_player *player)
+// {
+// 	player->key_up = false;
+// 	player->key_down = false;
+// 	player->key_left = false;
+// 	player->key_right = false;
 
-	player->left_rotate = false;
-	player->right_rotate = false;
+// 	player->left_rotate = false;
+// 	player->right_rotate = false;
+// }
+
+static void	load_texture(t_game *game, t_tex *tex, char *path)
+{
+	tex->img = mlx_xpm_file_to_image(game->mlx, path, &tex->width, &tex->height);
+	if (!tex->img)
+		exit(1);
+	tex->data = mlx_get_data_addr(tex->img, &tex->bpp, &tex->size_line, &tex->endian);
+	if (!tex->data)
+		exit(1);
 }
+
 
 void init_game(t_game *game, t_config *config)
 {
-	init_player(&game->player);
+	// init_player(&game->player);
 	game->map = config->map;
 	game->mlx = mlx_init();
 	if (!game->mlx)
 		exit(1);
+    load_texture(game, &game->no, config->no);
+    load_texture(game, &game->so, config->so);
+    load_texture(game, &game->we, config->we);
+    load_texture(game, &game->ea, config->ea);
 	game->win = mlx_new_window(game->mlx, WIN_W, WIN_H, "Cub3d");
 	if (!game->win)
 		exit(1);
