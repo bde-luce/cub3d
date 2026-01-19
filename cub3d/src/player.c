@@ -1,74 +1,69 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   player.c                                           :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: frteixei <frteixei@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2026/01/15 15:53:03 by frteixei          #+#    #+#             */
+/*   Updated: 2026/01/19 16:43:52 by frteixei         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "../inc/cub3d.h"
 
-float distance(float x, float y)
+float	distance(float x, float y)
 {
 	return (sqrt(x * x + y * y));
 }
 
-float fixed_dist(float x1, float y1, float x2, float y2, t_game *game)
+float	fixed_dist(t_player *p, float x2, float y2)
 {
-	float delta_x = x2 - x1;
-	float delta_y = y2 - y1;
-	float angle = atan2(delta_y, delta_x) - game->player.angle;
-	float fix_dist = distance(delta_x, delta_y) * cos(angle);
+	float	delta_x;
+	float	delta_y;
+	float	angle;
+	float	fix_dist;
+
+	delta_x = x2 - p->x;
+	delta_y = y2 - p->y;
+	angle = atan2(delta_y, delta_x) - p->angle;
+	fix_dist = distance(delta_x, delta_y) * cos(angle);
 	return (fix_dist);
 }
 
-bool touch(float px, float py, t_game *game)
+bool	touch(float px, float py, t_game *game)
 {
-	int x = px / BLOCK;
-	int y = py / BLOCK;
+	int	x;
+	int	y;
 
+	x = px / BLOCK;
+	y = py / BLOCK;
 	if (game->map[y][x] == '1')
 		return (true);
 	return (false);
 }
 
+static void	rotate_player(t_player *p)
+{
+	float	angle_speed;
+
+	angle_speed = 0.04;
+	if (p->left_rotate)
+		p->angle -= angle_speed;
+	if (p->right_rotate)
+		p->angle += angle_speed;
+	if (p->angle > 2 * PI)
+		p->angle = 0;
+	if (p->angle < 0)
+		p->angle = 2 * PI;
+}
+
 void	move_player(t_player *player, t_game *game)
 {
-	int speed = 5;
-	float angle_speed = 0.04;
-	float cos_angle = cos(player->angle);
-	float sin_angle = sin(player->angle);
+	float	dx;
+	float	dy;
 
-	if (player->left_rotate)
-		player->angle -= angle_speed;
-
-	if (player->right_rotate)
-		player->angle += angle_speed;
-	
-	float new_x = player->x;
-	float new_y = player->y;
-
-	if (player->angle > 2 * PI)
-		player->angle = 0;
-	
-	if (player->angle < 0)
-		player->angle = 2 * PI;
-
-	if (player->key_up)
-	{
-		new_x += cos_angle * speed;
-		new_y += sin_angle * speed;
-	}
-	if (player->key_down)
-	{
-		new_x -= cos_angle * speed;
-		new_y -= sin_angle * speed;
-	}
-	if (player->key_left)
-	{
-		new_x += sin_angle * speed;
-		new_y -= cos_angle * speed;
-	}
-	if (player->key_right)
-	{
-		new_x -= sin_angle * speed;
-		new_y += cos_angle * speed;
-	}
-
-	if (!touch(new_x, player->y, game))
-        player->x = new_x;
-    if (!touch(player->x, new_y, game))
-        player->y = new_y;
+	rotate_player(player);
+	get_move_vector(player, &dx, &dy);
+	apply_move(player, game, dx, dy);
 }

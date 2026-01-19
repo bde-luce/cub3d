@@ -1,30 +1,37 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   cub3d.h                                            :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: frteixei <frteixei@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2026/01/19 16:43:52 by frteixei          #+#    #+#             */
+/*   Updated: 2026/01/19 16:43:52 by frteixei         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #ifndef CUB3D_H
 # define CUB3D_H
 
-# include <stdlib.h>
-# include <unistd.h>
+# include "../src/libft/libft.h"
+# include "mlx.h"
 # include <fcntl.h>
-# include <stdio.h>
 # include <math.h>
 # include <stdbool.h>
-# include "mlx.h"
-# include "../src/libft/libft.h"
+# include <stdio.h>
+# include <stdlib.h>
+# include <unistd.h>
 
 # define WIN_W 1280
 # define WIN_H 720
 # define BLOCK 64
 # define PI 3.14159265359
-
 # define W 119
 # define A 97
 # define S 115
 # define D 100
 # define LEFT 65361
 # define RIGHT 65363
-
-# define WALL_COLOR 0xFF0000
-
-# define DEBUG 0
 
 typedef struct s_tex
 {
@@ -35,26 +42,21 @@ typedef struct s_tex
 	int		endian;
 	int		width;
 	int		height;
-}	t_tex;
+}			t_tex;
 
 typedef struct s_hit
 {
-	// Ray info
 	float	ray_x;
 	float	ray_y;
 	float	dir_x;
 	float	dir_y;
 	int		side;
-
-	// Texture info
 	t_tex	*tex;
 	int		tex_x;
-
-	// Render info
 	int		screen_x;
 	int		top;
 	int		bottom;
-}	t_hit;
+}			t_hit;
 
 typedef struct s_player
 {
@@ -67,7 +69,7 @@ typedef struct s_player
 	bool	key_right;
 	bool	left_rotate;
 	bool	right_rotate;
-}	t_player;
+}			t_player;
 
 typedef struct s_game
 {
@@ -86,7 +88,7 @@ typedef struct s_game
 	t_tex		we;
 	t_tex		ea;
 	t_player	player;
-}	t_game;
+}				t_game;
 
 typedef struct s_config
 {
@@ -100,11 +102,9 @@ typedef struct s_config
 	char	*f;
 	char	*c;
 	t_game	game;
-}	t_config;
+}			t_config;
 
 // INIT
-// void	init_config(t_config *config);
-// void	init_player(t_player *player);
 void	init_game(t_game *game, t_config *config);
 void	find_player_position(t_config *config);
 
@@ -122,21 +122,24 @@ int		handle_close(void *param);
 bool	touch(float px, float py, t_game *game);
 void	move_player(t_player *player, t_game *game);
 float	distance(float x, float y);
-float	fixed_dist(float x1, float y1, float x2, float y2, t_game *game);
+float	fixed_dist(t_player *p, float x2, float y2);
+void	get_move_vector(t_player *p, float *dx, float *dy);
+void	apply_move(t_player *p, t_game *game, float dx, float dy);
 
 // IMAGE
 void	put_pixel(int x, int y, int color, t_game *game);
 void	clear_image(t_game *game);
-void	draw_square(int x, int y, int size, int color, t_game *game);
-
-// MINIMAP
-void	draw_map(t_game *game, int *out_scale);
-void	draw_minimap_player(t_game *game, int scale);
-void	draw_minimap_ray(float ray_x, float ray_y, int scale, t_game *game);
 
 // RENDERING
 int		draw_loop(t_game *game);
-void	draw_line(t_player *player, t_game *game, float start_x, int i, int scale);
+void	draw_line(t_player *player, t_game *game, float start_x, int i);
+void	compute_wall_slice(t_hit *hit, t_player *player);
+int		get_side(float prev_x, float prev_y, float ray_x, float ray_y);
+void	get_right_tex(t_hit *hit, t_game *game);
+void	get_tex_x(t_hit *hit);
+void	init_hit_ray(t_hit *hit, t_player *player, float angle, int screen_x);
+void	cast_ray(t_hit *hit, t_game *game, float start_x);
+void	draw_texture_line(t_hit *hit, t_game *game);
 
 // PARSING
 // PARSING CONFIG
@@ -168,9 +171,5 @@ int		arr_len(char **arr);
 void	skip_pos_signal(char *str, int *i);
 void	skip_hwhitespace(char *str, int *i);
 int		count_trailing_ws(char *str);
-
-
-void	print_file(t_config *config);
-void	print_map(t_config *config);
 
 #endif

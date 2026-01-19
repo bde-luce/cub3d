@@ -1,9 +1,25 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   hooks.c                                            :+:      :+:    :+:   */
+/*                                                    +:+ +:+
+	+:+     */
+/*   By: frteixei <frteixei@student.42.fr>          +#+  +:+
+	+#+        */
+/*                                                +#+#+#+#+#+
+	+#+           */
+/*   Created: 2026/01/15 15:52:46 by frteixei          #+#    #+#             */
+/*   Updated: 2026/01/15 15:52:46 by frteixei         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "../inc/cub3d.h"
 
 int	key_press(int keycode, t_config *config)
 {
-	t_player *player = &config->game.player;
-	
+	t_player	*player;
+
+	player = &config->game.player;
 	if (keycode == 65307)
 	{
 		cleanup_mlx(config);
@@ -27,8 +43,9 @@ int	key_press(int keycode, t_config *config)
 
 int	key_release(int keycode, t_config *config)
 {
-	t_player *player = &config->game.player;
-	
+	t_player	*player;
+
+	player = &config->game.player;
 	if (keycode == W)
 		player->key_up = false;
 	if (keycode == A)
@@ -66,4 +83,5 @@ int	handle_close(void *param)
 	cleanup_mlx(config);
 	free_config(config);
 	exit(0);
+	return (0);
 }
