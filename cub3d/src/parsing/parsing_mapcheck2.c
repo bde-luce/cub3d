@@ -6,19 +6,25 @@
 /*   By: bde-luce <bde-luce@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/14 15:24:28 by bde-luce          #+#    #+#             */
-/*   Updated: 2026/01/14 16:52:51 by bde-luce         ###   ########.fr       */
+/*   Updated: 2026/01/19 13:17:02 by bde-luce         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../inc/cub3d.h"
 
+/*
+** Validates that the map is fully enclosed by walls.
+*/
 static int	is_valid_map_char(char c)
 {
 	return (c == '0' || c == '1' || c == 'N' || c == 'S'
 		|| c == 'E' || c == 'W' || c == ' ' || c == '	');
 }
 
-void	check_only_1player(t_config *config)
+/*
+** Checks that the map contains only valid characters and exactly one player.
+*/
+void	validate_map_content(t_config *config)
 {
 	int	i;
 	int	j;

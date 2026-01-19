@@ -12,6 +12,9 @@
 
 #include "../inc/cub3d.h"
 
+/*
+** Frees a NULL-terminated array of strings.
+*/
 void	free_arr(char **arr)
 {
 	int	i;
@@ -25,6 +28,9 @@ void	free_arr(char **arr)
 	}
 }
 
+/*
+** Frees all dynamically allocated fields inside the config structure.
+*/
 void	free_config(t_config *config)
 {
 	if (config->file)
@@ -45,22 +51,12 @@ void	free_config(t_config *config)
 		free_arr(config->map);
 }
 
+/*
+** Prints an error message, frees allocated resources, and exits the program.
+*/
 void	error_exit(char *str, t_config *config)
 {
 	printf("Error\n%s\n", str);
 	free_config(config);
 	exit(1);
 }
-
-// void	init_config(t_config *config)
-// {
-// 	config->file = NULL;
-// 	config->map = NULL;
-// 	config->rows = 0;
-// 	config->no = NULL;
-// 	config->so = NULL;
-// 	config->we = NULL;
-// 	config->ea = NULL;
-// 	config->f = NULL;
-// 	config->c = NULL;
-// }

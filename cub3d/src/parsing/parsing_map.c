@@ -12,17 +12,23 @@
 
 #include "../inc/cub3d.h"
 
+/*
+** Checks whether a line contains only whitespace or line breaks.
+*/
 static int	line_is_empty(char *str)
 {
 	int	i;
 
 	i = 0;
 	skip_hwhitespace(str, &i);
-	if (str[i] == '\n' || str[i] == '\r')
+	if (str[i] == '\n' || str[i] == '\r' || str[i] == '\0')
 		return (1);
 	return (0);
 }
 
+/*
+** Counts the number of map rows starting at a given index.
+*/
 static int	nbr_rows(int i, t_config *config)
 {
 	int	i_init;
@@ -33,6 +39,9 @@ static int	nbr_rows(int i, t_config *config)
 	return (i - i_init);
 }
 
+/*
+** Extracts the map from the file and ensures it is the last content.
+*/
 void	get_map(int i, t_config *config)
 {
 	int	j;

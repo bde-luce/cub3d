@@ -12,6 +12,9 @@
 
 #include "../inc/cub3d.h"
 
+/*
+** Checks that the input file has a .cub extension.
+*/
 static void	check_file_type(char *file_name, t_config *config)
 {
 	int	len;
@@ -21,6 +24,9 @@ static void	check_file_type(char *file_name, t_config *config)
 		error_exit("Wrong type of file (!= .cub)", config);
 }
 
+/*
+** Counts the number of lines in a file.
+*/
 static int	nbr_lines(char *file, t_config *config)
 {
 	int		fd;
@@ -42,6 +48,9 @@ static int	nbr_lines(char *file, t_config *config)
 	return (nbr_lines);
 }
 
+/*
+** Reads the entire .cub file into a NULL-terminated array of lines.
+*/
 void	file_convert(t_config *config, char **argv)
 {
 	int		fd;

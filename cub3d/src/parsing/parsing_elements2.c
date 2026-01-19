@@ -12,12 +12,18 @@
 
 #include "../inc/cub3d.h"
 
+/*
+** Checks whether all 6 required elements are present.
+*/
 static int	has_6_elements(t_config *config)
 {
 	return (config->no && config->so && config->we
 		&& config->ea && config->f && config->c);
 }
 
+/*
+** Handles parsing of EA, F and C elements.
+*/
 static void	check_elem_id_2(t_config *config, char *elem)
 {
 	int	i;
@@ -43,9 +49,12 @@ static void	check_elem_id_2(t_config *config, char *elem)
 		config->c = get_info(i + 1, "color", elem, config);
 	}
 	else if (elem[i] != '\n' && elem[i] != '\r' && elem[i] != '\0')
-		error_exit("Wrong/missing element type", config);
+		error_exit("Invalid file structure", config);
 }
 
+/*
+** Identifies and parses a single element line (NO, SO, WE, EA, F, C).
+*/
 static void	check_elem_id(t_config *config, char *elem)
 {
 	int	i;
@@ -74,6 +83,9 @@ static void	check_elem_id(t_config *config, char *elem)
 		check_elem_id_2(config, elem);
 }
 
+/*
+** Parses and validates all required elements before the map.
+*/
 void	validate_elements(int *i, t_config *config)
 {
 	while (!has_6_elements(config))

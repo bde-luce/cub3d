@@ -1,5 +1,9 @@
 #include "../inc/cub3d.h"
 
+/*
+** Determines whether the ray hit a vertical (1) or horizontal wall (0) by comparing
+** the grid cell crossed between the previous and current ray positions.
+*/
 static int get_side(float prev_x, float prev_y, float ray_x, float ray_y)
 {
 	int prev_cell_x;
@@ -18,6 +22,10 @@ static int get_side(float prev_x, float prev_y, float ray_x, float ray_y)
 	return (-1);
 }
 
+/*
+** Selects the correct wall texture (NO, SO, WE, EA) based on the wall side hit
+** and the ray direction.
+*/
 static void	get_right_tex(t_hit *hit, t_game *game)
 {
 	if (hit->side == 0)
@@ -36,6 +44,10 @@ static void	get_right_tex(t_hit *hit, t_game *game)
 	}
 }
 
+/*
+** Computes the horizontal texture coordinate (tex_x) corresponding to the
+** wall hit position, adjusting for wall orientation and ray direction.
+*/
 static void	get_tex_x(t_hit *hit)
 {
 	float wallX;
@@ -57,6 +69,10 @@ static void	get_tex_x(t_hit *hit)
 		hit->tex_x = hit->tex->width - 1 - hit->tex_x;
 }
 
+/*
+** Draws a vertical textured wall slice on screen by mapping texture pixels
+** to the corresponding screen column between the wall's top and bottom.
+*/
 static void draw_texture_line(t_hit *hit, t_game *game)
 {
 	int lineHeight = hit->bottom - hit->top;
@@ -83,6 +99,9 @@ static void draw_texture_line(t_hit *hit, t_game *game)
 	}
 }
 
+/*
+** Initializes the ray parameters for a single screen column.
+*/
 static void	init_hit_ray(t_hit *hit, t_player *player, float angle, int screen_x)
 {
 	hit->ray_x = player->x;
@@ -92,6 +111,10 @@ static void	init_hit_ray(t_hit *hit, t_player *player, float angle, int screen_x
 	hit->screen_x = screen_x;
 }
 
+/*
+** Advances the ray step by step in the ray direction until a wall is hit
+** and records the wall side hit.
+*/
 static void cast_ray(t_hit *hit, t_game *game, float start_x, int scale)
 {
 	float cos_angle;
@@ -118,6 +141,10 @@ static void cast_ray(t_hit *hit, t_game *game, float start_x, int scale)
 	hit->side = get_side(prev_x, prev_y, hit->ray_x, hit->ray_y);
 }
 
+/*
+** Computes the projected wall height and vertical screen bounds based on the
+** corrected distance from the player to the wall hit.
+*/
 static void	compute_wall_slice(t_hit *hit, t_player *player, t_game *game)
 {
 	float dist;
@@ -135,6 +162,11 @@ static void	compute_wall_slice(t_hit *hit, t_player *player, t_game *game)
 		hit->bottom = WIN_H;
 }
 
+/*
+** Renders a single vertical screen column by casting a ray, selecting the
+** correct texture, computing the wall slice, and drawing ceiling, wall,
+** and floor pixels.
+*/
 void draw_line(t_player *player, t_game *game, float start_x, int i, int scale)
 {
 	t_hit	hit;
@@ -162,6 +194,10 @@ void draw_line(t_player *player, t_game *game, float start_x, int i, int scale)
 		put_pixel(i, y++, game->floor_color, game);
 }
 
+/*
+** Main rendering loop that updates player movement, clears the screen,
+** casts rays for all screen columns, and displays the final frame.
+*/
 int draw_loop(t_game *game)
 {
 	t_player *player = &game->player;

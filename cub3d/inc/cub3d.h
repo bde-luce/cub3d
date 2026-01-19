@@ -157,7 +157,7 @@ void	get_map(int i, t_config *config);
 
 //PARSING MAPCHECK
 void	check_map_is_closed(t_config *config);
-void	check_only_1player(t_config *config);
+void	validate_map_content(t_config *config);
 
 // PARSING PIPELINE
 void	map_validate(t_config *config);

@@ -12,12 +12,18 @@
 
 #include "../inc/cub3d.h"
 
+/*
+** Runs all map-related validations.
+*/
 static void	check_map(t_config *config)
 {
-	check_only_1player(config);
+	validate_map_content(config);
 	check_map_is_closed(config);
 }
 
+/*
+** Full parsing pipeline: elements → map → validations.
+*/
 void	map_validate(t_config *config)
 {
 	int	i;

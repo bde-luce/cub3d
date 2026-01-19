@@ -12,6 +12,9 @@
 
 #include "../inc/cub3d.h"
 
+/*
+** Counts the number of commas in a string.
+*/
 static int	count_commas(char *s)
 {
 	int	i;
@@ -27,6 +30,9 @@ static int	count_commas(char *s)
 	return (c);
 }
 
+/*
+** Checks whether a color component is a valid integer in the range [0, 255].
+*/
 static int	check_color_range(char *color)
 {
 	int	i;
@@ -51,26 +57,9 @@ static int	check_color_range(char *color)
 	return (1);
 }
 
-// int rgb_to_int(char *rgb)
-// {
-//     char **c;
-//     int r, g, b;
-//     int color;
-
-//     c = ft_split(rgb, ',');
-//     if (!c)
-//         return (-1);
-
-//     r = ft_atoi(c[0]);
-//     g = ft_atoi(c[1]);
-//     b = ft_atoi(c[2]);
-
-//     free_arr(c);
-
-//     color = (r << 16) | (g << 8) | b;
-//     return (color);
-// }
-
+/*
+** Validates a full RGB color definition (format and value ranges).
+*/
 static void	check_info_color(char *info, t_config *config)
 {
 	char	**rgb;
@@ -99,6 +88,9 @@ static void	check_info_color(char *info, t_config *config)
 	free_arr(rgb);
 }
 
+/*
+** Validates an element value depending on its type (texture path or color).
+*/
 static void	check_info(char *info, char *info_type, t_config *config)
 {
 	int	fd;
@@ -117,6 +109,9 @@ static void	check_info(char *info, char *info_type, t_config *config)
 		check_info_color(info, config);
 }
 
+/*
+** Extracts and validates the value associated with a map element.
+*/
 char	*get_info(int i, char *info_type, char *elem, t_config *config)
 {
 	int		start_i;

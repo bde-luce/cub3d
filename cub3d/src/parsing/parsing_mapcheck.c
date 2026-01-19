@@ -12,6 +12,9 @@
 
 #include "../inc/cub3d.h"
 
+/*
+** Extracts the map from the file and ensures it is the last content.
+*/
 static int	is_player_or_zero(char c)
 {
 	if (c == '0' || c == 'N' || c == 'S' || c == 'W' || c == 'E')
@@ -19,6 +22,9 @@ static int	is_player_or_zero(char c)
 	return (0);
 }
 
+/*
+** Validates that a map cell is properly enclosed by walls
+*/
 static void	check_cell(int i, int j, t_config *config)
 {
 	int	k;
@@ -35,6 +41,9 @@ static void	check_cell(int i, int j, t_config *config)
 		error_exit("Map is not closed", config);
 }
 
+/*
+** Checks the middle rows of the map for proper wall enclosure.
+*/
 static void	check_middle(t_config *config)
 {
 	int	i;
@@ -57,6 +66,10 @@ static void	check_middle(t_config *config)
 	}
 }
 
+/*
+** Ensures that the first and last rows of the map contain no walkable cells
+** or player positions, ensuring therefore the map is closed
+*/
 static void	check_1st_and_last_line(t_config *config)
 {
 	int	j;
@@ -77,6 +90,9 @@ static void	check_1st_and_last_line(t_config *config)
 	}
 }
 
+/*
+** Validates that the map is fully enclosed by walls.
+*/
 void	check_map_is_closed(t_config *config)
 {
 	check_1st_and_last_line(config);
