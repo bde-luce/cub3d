@@ -166,7 +166,7 @@ void	map_validate(t_config *config);
 int		is_hws(char c);
 int		arr_len(char **arr);
 void	skip_pos_signal(char *str, int *i);
-int		skip_hwhitespace(char *str, int *i);
+void	skip_hwhitespace(char *str, int *i);
 int		count_trailing_ws(char *str);
 
 
