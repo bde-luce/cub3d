@@ -6,21 +6,11 @@
 /*   By: frteixei <frteixei@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/07 16:46:58 by frteixei          #+#    #+#             */
-/*   Updated: 2026/01/19 17:18:24 by frteixei         ###   ########.fr       */
+/*   Updated: 2026/01/20 12:27:57 by frteixei         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../inc/cub3d.h"
-
-static void	init_player(t_player *player)
-{
-	player->key_up = false;
-	player->key_down = false;
-	player->key_left = false;
-	player->key_right = false;
-	player->left_rotate = false;
-	player->right_rotate = false;
-}
 
 static void	load_texture(t_game *game, t_tex *tex, char *path)
 {
@@ -44,7 +34,6 @@ static void	load_all_textures(t_game *game, t_config *config)
 
 void	init_game(t_game *game, t_config *config)
 {
-	init_player(&game->player);
 	game->map = config->map;
 	game->mlx = mlx_init();
 	if (!game->mlx)

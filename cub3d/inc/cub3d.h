@@ -115,7 +115,6 @@ void	cleanup_mlx(t_config *config);
 // HOOKS
 int		key_press(int keycode, t_config *config);
 int		key_release(int keycode, t_config *config);
-int		handle_key(int keycode, void *param);
 int		handle_close(void *param);
 
 // PLAYER
@@ -146,7 +145,6 @@ void	draw_texture_line(t_hit *hit, t_game *game);
 void	free_arr(char **arr);
 void	free_config(t_config *config);
 void	error_exit(char *str, t_config *config);
-void	init_config(t_config *config);
 
 // PARSING FILE
 void	file_convert(t_config *config, char **argv);

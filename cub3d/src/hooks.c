@@ -61,20 +61,6 @@ int	key_release(int keycode, t_config *config)
 	return (0);
 }
 
-int	handle_key(int keycode, void *param)
-{
-	t_config	*config;
-
-	config = (t_config *)param;
-	if (keycode == 65307)
-	{
-		cleanup_mlx(config);
-		free_config(config);
-		exit(0);
-	}
-	return (0);
-}
-
 int	handle_close(void *param)
 {
 	t_config	*config;
@@ -83,5 +69,4 @@ int	handle_close(void *param)
 	cleanup_mlx(config);
 	free_config(config);
 	exit(0);
-	return (0);
 }

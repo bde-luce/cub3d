@@ -6,7 +6,7 @@
 /*   By: frteixei <frteixei@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/07 16:54:22 by frteixei          #+#    #+#             */
-/*   Updated: 2026/01/19 16:57:27 by frteixei         ###   ########.fr       */
+/*   Updated: 2026/01/20 12:25:16 by frteixei         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,7 +22,6 @@ int	main(int argc, char **argv)
 		return (1);
 	}
 	ft_bzero(&config, sizeof(t_config));
-	init_config(&config);
 	file_convert(&config, argv);
 	map_validate(&config);
 	find_player_position(&config);
