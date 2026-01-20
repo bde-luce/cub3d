@@ -1,9 +1,25 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   hooks.c                                            :+:      :+:    :+:   */
+/*                                                    +:+ +:+
+	+:+     */
+/*   By: frteixei <frteixei@student.42.fr>          +#+  +:+
+	+#+        */
+/*                                                +#+#+#+#+#+
+	+#+           */
+/*   Created: 2026/01/15 15:52:46 by frteixei          #+#    #+#             */
+/*   Updated: 2026/01/15 15:52:46 by frteixei         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "../inc/cub3d.h"
 
 int	key_press(int keycode, t_config *config)
 {
-	t_player *player = &config->game.player;
-	
+	t_player	*player;
+
+	player = &config->game.player;
 	if (keycode == 65307)
 	{
 		cleanup_mlx(config);
@@ -27,8 +43,9 @@ int	key_press(int keycode, t_config *config)
 
 int	key_release(int keycode, t_config *config)
 {
-	t_player *player = &config->game.player;
-	
+	t_player	*player;
+
+	player = &config->game.player;
 	if (keycode == W)
 		player->key_up = false;
 	if (keycode == A)
@@ -53,116 +70,101 @@ int	handle_close(void *param)
 	free_config(config);
 	exit(0);
 }
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   image.c                                            :+:      :+:    :+:   */
+/*                                                    +:+ +:+
+	+:+     */
+/*   By: frteixei <frteixei@student.42.fr>          +#+  +:+
+	+#+        */
+/*                                                +#+#+#+#+#+
+	+#+           */
+/*   Created: 2026/01/15 15:52:49 by frteixei          #+#    #+#             */
+/*   Updated: 2026/01/15 15:52:49 by frteixei         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "../inc/cub3d.h"
 
-void put_pixel(int x, int y, int color, t_game *game)
+void	put_pixel(int x, int y, int color, t_game *game)
 {
+	int	index;
+
 	if (x >= WIN_W || y >= WIN_H || x < 0 || y < 0)
-		return;
-	int index = y * game->size_line + x * game->bpp / 8;
+		return ;
+	index = y * game->size_line + x * game->bpp / 8;
 	game->data[index] = color & 0xFF;
 	game->data[index + 1] = (color >> 8) & 0xFF;
 	game->data[index + 2] = (color >> 16) & 0xFF;
 }
 
-void clear_image(t_game *game)
+void	clear_image(t_game *game)
 {
-	for (int y = 0; y < WIN_H; y++)
-		for (int x = 0; x <WIN_W; x++)
-			put_pixel(x, y, 0, game);
-}
+	int	y;
+	int	x;
 
-void draw_square(int x, int y, int size, int color, t_game *game)
-{
-	for (int i = 0; i < size; i++)
-		put_pixel(x + i, y, color, game);
-	for (int i = 0; i < size; i++)
-		put_pixel(x, y + i, color, game);
-	for (int i = 0; i < size; i++)
-		put_pixel(x + size, y + i, color, game);
-	for (int i = 0; i < size; i++)
-		put_pixel(x + i, y + size, color, game);
+	y = 0;
+	while (y < WIN_H)
+	{
+		x = 0;
+		while (x < WIN_W)
+		{
+			put_pixel(x, y, 0, game);
+			x++;
+		}
+		y++;
+	}
 }
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
 /*   init.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: bde-luce <bde-luce@student.42.fr>          +#+  +:+       +#+        */
+/*   By: frteixei <frteixei@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/07 16:46:58 by frteixei          #+#    #+#             */
-/*   Updated: 2026/01/19 11:04:20 by bde-luce         ###   ########.fr       */
+/*   Updated: 2026/01/20 12:27:57 by frteixei         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../inc/cub3d.h"
 
-void find_player_position(t_config *config)
-{
-    int i, j;
-    
-    i = 0;
-    while (config->map[i])
-    {
-        j = 0;
-        while (config->map[i][j])
-        {
-            if (config->map[i][j] == 'N' || config->map[i][j] == 'S' ||
-                config->map[i][j] == 'E' || config->map[i][j] == 'W')
-            {
-                // Store player position in map coordinates
-                config->game.player.x = j * BLOCK + BLOCK / 2;
-                config->game.player.y = i * BLOCK + BLOCK / 2;
-                
-                // Set angle based on direction
-                if (config->map[i][j] == 'N')
-                    config->game.player.angle = 3 * PI / 2; // Up
-                else if (config->map[i][j] == 'S')
-                    config->game.player.angle = PI / 2;     // Down
-                else if (config->map[i][j] == 'E')
-                    config->game.player.angle = 0;          // Right
-                else if (config->map[i][j] == 'W')
-                    config->game.player.angle = PI;         // Left
-                return;
-            }
-            j++;
-        }
-        i++;
-    }
-}
-
 static void	load_texture(t_game *game, t_tex *tex, char *path)
 {
-	tex->img = mlx_xpm_file_to_image(game->mlx, path, &tex->width, &tex->height);
+	tex->img = mlx_xpm_file_to_image(game->mlx, path,
+			&tex->width, &tex->height);
 	if (!tex->img)
 		exit(1);
-	tex->data = mlx_get_data_addr(tex->img, &tex->bpp, &tex->size_line, &tex->endian);
+	tex->data = mlx_get_data_addr(tex->img, &tex->bpp,
+			&tex->size_line, &tex->endian);
 	if (!tex->data)
 		exit(1);
 }
 
-static void load_all_textures(t_game *game, t_config *config)
+static void	load_all_textures(t_game *game, t_config *config)
 {
-    load_texture(game, &game->no, config->no);
-    load_texture(game, &game->so, config->so);
-    load_texture(game, &game->we, config->we);
-    load_texture(game, &game->ea, config->ea);
+	load_texture(game, &game->no, config->no);
+	load_texture(game, &game->so, config->so);
+	load_texture(game, &game->we, config->we);
+	load_texture(game, &game->ea, config->ea);
 }
 
-void init_game(t_game *game, t_config *config)
+void	init_game(t_game *game, t_config *config)
 {
 	game->map = config->map;
 	game->mlx = mlx_init();
 	if (!game->mlx)
 		exit(1);
-    load_all_textures(game, config);
+	load_all_textures(game, config);
 	game->win = mlx_new_window(game->mlx, WIN_W, WIN_H, "Cub3d");
 	if (!game->win)
 		exit(1);
 	game->img = mlx_new_image(game->mlx, WIN_W, WIN_H);
 	if (!game->img)
 		exit(1);
-	game->data = mlx_get_data_addr(game->img, &game->bpp, &game->size_line, &game->endian);
+	game->data = mlx_get_data_addr(game->img, &game->bpp,
+			&game->size_line, &game->endian);
 	if (!game->data)
 		exit(1);
 	mlx_put_image_to_window(game->mlx, game->win, game->img, 0, 0);
@@ -172,10 +174,10 @@ void init_game(t_game *game, t_config *config)
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: bde-luce <bde-luce@student.42.fr>          +#+  +:+       +#+        */
+/*   By: frteixei <frteixei@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/07 16:54:22 by frteixei          #+#    #+#             */
-/*   Updated: 2026/01/15 13:13:00 by bde-luce         ###   ########.fr       */
+/*   Updated: 2026/01/20 12:25:16 by frteixei         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -190,205 +192,414 @@ int	main(int argc, char **argv)
 		write(2, "Error\nUsage: ./cub3d map.cub\n", 29);
 		return (1);
 	}
-
 	ft_bzero(&config, sizeof(t_config));
-
 	file_convert(&config, argv);
 	map_validate(&config);
 	find_player_position(&config);
-
-	config.game.floor_color   = rgb_to_int(config.f);
+	config.game.floor_color = rgb_to_int(config.f);
 	config.game.ceiling_color = rgb_to_int(config.c);
-
 	init_game(&config.game, &config);
-	mlx_hook(config.game.win, 2, 1L<<0, key_press, &config);
-	mlx_hook(config.game.win, 3, 1L<<1, key_release, &config);
+	mlx_hook(config.game.win, 2, 1L << 0, key_press, &config);
+	mlx_hook(config.game.win, 3, 1L << 1, key_release, &config);
 	mlx_hook(config.game.win, 17, 0, handle_close, &config);
-	
 	mlx_loop_hook(config.game.mlx, draw_loop, &config.game);
 	mlx_loop(config.game.mlx);
-
 	free_config(&config);
 	return (0);
 }
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   mlx_utils.c                                        :+:      :+:    :+:   */
+/*                                                    +:+ +:+
+	+:+     */
+/*   By: frteixei <frteixei@student.42.fr>          +#+  +:+
+	+#+        */
+/*                                                +#+#+#+#+#+
+	+#+           */
+/*   Created: 2026/01/15 15:53:00 by frteixei          #+#    #+#             */
+/*   Updated: 2026/01/15 15:53:00 by frteixei         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "../inc/cub3d.h"
 
-void draw_map(t_game *game, int *out_scale)
+int	rgb_to_int(char *rgb)
 {
-	char **map = game->map;
-	int color = 0x0000FF;
-	
-	// Count map dimensions
-	int map_height = 0;
-	int map_width = 0;
-	while (map[map_height])
-	{
-		int len = ft_strlen(map[map_height]);
-		if (len > map_width)
-			map_width = len;
-		map_height++;
-	}
-	
-	// Calculate scale to fit window
-	int scale_x = WIN_W / map_width;
-	int scale_y = WIN_H / map_height;
-	int scale = (scale_x < scale_y) ? scale_x : scale_y;
-	
-	if (scale < 1)
-		scale = 1;
-	
-	*out_scale = scale; // Return the scale for use elsewhere
-	
-	// Draw scaled map
-	for (int y = 0; map[y]; y++)
-		for(int x = 0; map[y][x]; x++)
-			if (map[y][x] == '1')
-				draw_square(x * scale, y * scale, scale, color, game);
-}
+	char	**c;
+	int		r;
+	int		g;
+	int		b;
+	int		color;
 
-void draw_minimap_player(t_game *game, int scale)
-{
-	// Draw player at correct scale
-	int player_x = (game->player.x / BLOCK) * scale;
-	int player_y = (game->player.y / BLOCK) * scale;
-	draw_square(player_x, player_y, 10, 0x00FF00, game);
-}
-
-void draw_minimap_ray(float ray_x, float ray_y, int scale, t_game *game)
-{
-	// Scale the ray position for minimap
-	int scaled_x = (ray_x / BLOCK) * scale;
-	int scaled_y = (ray_y / BLOCK) * scale;
-	put_pixel(scaled_x, scaled_y, 0xFF0000, game);
-}
-#include "../inc/cub3d.h"
-
-int rgb_to_int(char *rgb)
-{
-    char **c;
-    int r, g, b;
-    int color;
-
-    c = ft_split(rgb, ',');
-    if (!c)
-        return (-1);
-
-    r = ft_atoi(c[0]);
-    g = ft_atoi(c[1]);
-    b = ft_atoi(c[2]);
-
-    free_arr(c);
-
-    color = (r << 16) | (g << 8) | b;
-    return (color);
+	c = ft_split(rgb, ',');
+	if (!c)
+		return (-1);
+	r = ft_atoi(c[0]);
+	g = ft_atoi(c[1]);
+	b = ft_atoi(c[2]);
+	free_arr(c);
+	color = (r << 16) | (g << 8) | b;
+	return (color);
 }
 
 void	cleanup_mlx(t_config *config)
 {
-    if (config->game.no.img)
-        mlx_destroy_image(config->game.mlx, config->game.no.img);
-    if (config->game.so.img)
-        mlx_destroy_image(config->game.mlx, config->game.so.img);
-    if (config->game.we.img)
-        mlx_destroy_image(config->game.mlx, config->game.we.img);
-    if (config->game.ea.img)
-        mlx_destroy_image(config->game.mlx, config->game.ea.img);
-    if (config->game.img)
-        mlx_destroy_image(config->game.mlx, config->game.img);
-    if (config->game.win)
-        mlx_destroy_window(config->game.mlx, config->game.win);
-    if (config->game.mlx)
+	if (config->game.no.img)
+		mlx_destroy_image(config->game.mlx, config->game.no.img);
+	if (config->game.so.img)
+		mlx_destroy_image(config->game.mlx, config->game.so.img);
+	if (config->game.we.img)
+		mlx_destroy_image(config->game.mlx, config->game.we.img);
+	if (config->game.ea.img)
+		mlx_destroy_image(config->game.mlx, config->game.ea.img);
+	if (config->game.img)
+		mlx_destroy_image(config->game.mlx, config->game.img);
+	if (config->game.win)
+		mlx_destroy_window(config->game.mlx, config->game.win);
+	if (config->game.mlx)
 	{
 		mlx_destroy_display(config->game.mlx);
 		free(config->game.mlx);
 	}
 }
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   player.c                                           :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: frteixei <frteixei@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2026/01/15 15:53:03 by frteixei          #+#    #+#             */
+/*   Updated: 2026/01/19 16:43:52 by frteixei         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "../inc/cub3d.h"
 
-float distance(float x, float y)
+float	distance(float x, float y)
 {
 	return (sqrt(x * x + y * y));
 }
 
-float fixed_dist(float x1, float y1, float x2, float y2, t_game *game)
+float	fixed_dist(t_player *p, float x2, float y2)
 {
-	float delta_x = x2 - x1;
-	float delta_y = y2 - y1;
-	float angle = atan2(delta_y, delta_x) - game->player.angle;
-	float fix_dist = distance(delta_x, delta_y) * cos(angle);
+	float	delta_x;
+	float	delta_y;
+	float	angle;
+	float	fix_dist;
+
+	delta_x = x2 - p->x;
+	delta_y = y2 - p->y;
+	angle = atan2(delta_y, delta_x) - p->angle;
+	fix_dist = distance(delta_x, delta_y) * cos(angle);
 	return (fix_dist);
 }
 
-bool touch(float px, float py, t_game *game)
+bool	touch(float px, float py, t_game *game)
 {
-	int x = px / BLOCK;
-	int y = py / BLOCK;
+	int	x;
+	int	y;
 
+	x = px / BLOCK;
+	y = py / BLOCK;
 	if (game->map[y][x] == '1')
 		return (true);
 	return (false);
 }
 
+static void	rotate_player(t_player *p)
+{
+	float	angle_speed;
+
+	angle_speed = 0.04;
+	if (p->left_rotate)
+		p->angle -= angle_speed;
+	if (p->right_rotate)
+		p->angle += angle_speed;
+	if (p->angle > 2 * PI)
+		p->angle = 0;
+	if (p->angle < 0)
+		p->angle = 2 * PI;
+}
+
 void	move_player(t_player *player, t_game *game)
 {
-	int speed = 5;
-	float angle_speed = 0.04;
-	float cos_angle = cos(player->angle);
-	float sin_angle = sin(player->angle);
+	float	dx;
+	float	dy;
 
-	if (player->left_rotate)
-		player->angle -= angle_speed;
-
-	if (player->right_rotate)
-		player->angle += angle_speed;
-	
-	float new_x = player->x;
-	float new_y = player->y;
-
-	if (player->angle > 2 * PI)
-		player->angle = 0;
-	
-	if (player->angle < 0)
-		player->angle = 2 * PI;
-
-	if (player->key_up)
-	{
-		new_x += cos_angle * speed;
-		new_y += sin_angle * speed;
-	}
-	if (player->key_down)
-	{
-		new_x -= cos_angle * speed;
-		new_y -= sin_angle * speed;
-	}
-	if (player->key_left)
-	{
-		new_x += sin_angle * speed;
-		new_y -= cos_angle * speed;
-	}
-	if (player->key_right)
-	{
-		new_x -= sin_angle * speed;
-		new_y += cos_angle * speed;
-	}
-
-	if (!touch(new_x, player->y, game))
-        player->x = new_x;
-    if (!touch(player->x, new_y, game))
-        player->y = new_y;
+	rotate_player(player);
+	get_move_vector(player, &dx, &dy);
+	apply_move(player, game, dx, dy);
 }
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   player_utils.c                                     :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: frteixei <frteixei@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2026/01/19 16:43:52 by frteixei          #+#    #+#             */
+/*   Updated: 2026/01/19 17:18:34 by frteixei         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
+#include "../inc/cub3d.h"
+
+void	get_move_vector(t_player *p, float *dx, float *dy)
+{
+	float	speed;
+	float	cos_a;
+	float	sin_a;
+	int		fwd;
+	int		side;
+
+	speed = 5;
+	cos_a = cos(p->angle);
+	sin_a = sin(p->angle);
+	fwd = p->key_up - p->key_down;
+	side = p->key_left - p->key_right;
+	*dx = (cos_a * fwd + sin_a * side) * speed;
+	*dy = (sin_a * fwd - cos_a * side) * speed;
+}
+
+void	apply_move(t_player *p, t_game *game, float dx, float dy)
+{
+	float	new_x;
+	float	new_y;
+
+	new_x = p->x + dx;
+	new_y = p->y + dy;
+	if (!touch(new_x, p->y, game))
+		p->x = new_x;
+	if (!touch(p->x, new_y, game))
+		p->y = new_y;
+}
+
+static double	get_player_angle(char c)
+{
+	if (c == 'N')
+		return (3 * PI / 2);
+	if (c == 'S')
+		return (PI / 2);
+	if (c == 'E')
+		return (0);
+	return (PI);
+}
+
+void	find_player_position(t_config *config)
+{
+	int	i;
+	int	j;
+
+	i = 0;
+	while (config->map[i])
+	{
+		j = 0;
+		while (config->map[i][j])
+		{
+			if (ft_strchr("NSEW", config->map[i][j]))
+			{
+				config->game.player.x = j * BLOCK + BLOCK / 2;
+				config->game.player.y = i * BLOCK + BLOCK / 2;
+				config->game.player.angle = get_player_angle(config->map[i][j]);
+				return ;
+			}
+			j++;
+		}
+		i++;
+	}
+}
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   raycasting.c                                       :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: frteixei <frteixei@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2026/01/19 17:00:00 by frteixei          #+#    #+#             */
+/*   Updated: 2026/01/20 13:49:54 by frteixei         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "../inc/cub3d.h"
 
 /*
-** Determines whether the ray hit a vertical (1) or horizontal wall (0) by comparing
-** the grid cell crossed between the previous and current ray positions.
+** Advances the ray step by step in the ray direction until a wall is hit
+** and records the wall side hit.
 */
-static int get_side(float prev_x, float prev_y, float ray_x, float ray_y)
+void	cast_ray(t_hit *hit, t_game *game, float start_x)
 {
-	int prev_cell_x;
-	int prev_cell_y;
-	int cell_x;
-	int cell_y;
+	float	cos_angle;
+	float	sin_angle;
+	float	prev_x;
+	float	prev_y;
+
+	cos_angle = cos(start_x);
+	sin_angle = sin(start_x);
+	prev_x = hit->ray_x;
+	prev_y = hit->ray_y;
+	while (!touch(hit->ray_x, hit->ray_y, game))
+	{
+		prev_x = hit->ray_x;
+		prev_y = hit->ray_y;
+		hit->ray_x += cos_angle;
+		hit->ray_y += sin_angle;
+	}
+	hit->side = get_side(prev_x, prev_y, hit->ray_x, hit->ray_y);
+}
+
+/*
+** Draws a vertical textured wall slice on screen by mapping texture pixels
+** to the corresponding screen column between the wall's top and bottom.
+*/
+static int	get_tex_color(t_hit *hit, int tex_y)
+{
+	int	index;
+	int	color;
+
+	index = tex_y * hit->tex->size_line + hit->tex_x * (hit->tex->bpp / 8);
+	color = hit->tex->data[index] | (hit->tex->data[index + 1] << 8)
+		| (hit->tex->data[index + 2] << 16);
+	return (color);
+}
+
+static int	clamp_tex_y(int tex_y, int height)
+{
+	if (tex_y < 0)
+		return (0);
+	if (tex_y >= height)
+		return (height - 1);
+	return (tex_y);
+}
+
+void	draw_texture_line(t_hit *hit, t_game *game)
+{
+	int		y;
+	float	step;
+	float	tex_pos;
+
+	step = (float)hit->tex->height / (float)(hit->bottom - hit->top);
+	tex_pos = (hit->top - WIN_H / 2.0f + (hit->bottom - hit->top) / 2.0f)
+		* step;
+	y = hit->top;
+	while (y < hit->bottom)
+	{
+		put_pixel(hit->screen_x, y,
+			get_tex_color(hit, clamp_tex_y((int)tex_pos, hit->tex->height)),
+			game);
+		tex_pos += step;
+		y++;
+	}
+}
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   rendering.c                                        :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: frteixei <frteixei@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2026/01/19 16:53:29 by frteixei          #+#    #+#             */
+/*   Updated: 2026/01/19 17:00:00 by frteixei         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
+#include "../inc/cub3d.h"
+
+/*
+** Computes the projected wall height and vertical screen bounds based on the
+** corrected distance from the player to the wall hit.
+*/
+void	compute_wall_slice(t_hit *hit, t_player *player)
+{
+	float	dist;
+	float	height;
+
+	dist = fixed_dist(player, hit->ray_x, hit->ray_y);
+	height = (BLOCK / dist) * (WIN_W / 2);
+	hit->top = (WIN_H - height) / 2;
+	hit->bottom = hit->top + height;
+	if (hit->top < 0)
+		hit->top = 0;
+	if (hit->bottom > WIN_H)
+		hit->bottom = WIN_H;
+}
+
+/*
+** Renders a single vertical screen column by casting a ray, selecting the
+** correct texture, computing the wall slice, and drawing ceiling, wall,
+** and floor pixels.
+*/
+void	draw_line(t_player *player, t_game *game, float start_x, int i)
+{
+	t_hit	hit;
+	int		y;
+
+	init_hit_ray(&hit, player, start_x, i);
+	cast_ray(&hit, game, start_x);
+	get_right_tex(&hit, game);
+	get_tex_x(&hit);
+	compute_wall_slice(&hit, player);
+	y = 0;
+	while (y < hit.top)
+		put_pixel(i, y++, game->ceiling_color, game);
+	draw_texture_line(&hit, game);
+	y = hit.bottom;
+	while (y < WIN_H)
+		put_pixel(i, y++, game->floor_color, game);
+}
+
+/*
+** Main rendering loop that updates player movement, clears the screen,
+** casts rays for all screen columns, and displays the final frame.
+*/
+int	draw_loop(t_game *game)
+{
+	t_player	*player;
+	float		fraction;
+	float		start_x;
+	int			i;
+
+	player = &game->player;
+	move_player(player, game);
+	clear_image(game);
+	fraction = PI / 3 / WIN_W;
+	start_x = player->angle - PI / 6;
+	i = 0;
+	while (i < WIN_W)
+	{
+		draw_line(player, game, start_x, i);
+		start_x += fraction;
+		i++;
+	}
+	mlx_put_image_to_window(game->mlx, game->win, game->img, 0, 0);
+	return (0);
+}
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   rendering_utils.c                                  :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: frteixei <frteixei@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2026/01/19 17:00:00 by frteixei          #+#    #+#             */
+/*   Updated: 2026/01/19 17:10:13 by frteixei         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
+#include "../inc/cub3d.h"
+
+/*
+** Determines whether the ray hit a vertical (0) or horizontal wall (1)
+** by comparing the grid cell crossed between the previous
+** and current ray positions.
+*/
+int	get_side(float prev_x, float prev_y, float ray_x, float ray_y)
+{
+	int	prev_cell_x;
+	int	prev_cell_y;
+	int	cell_x;
+	int	cell_y;
 
 	prev_cell_x = (int)(prev_x / BLOCK);
 	prev_cell_y = (int)(prev_y / BLOCK);
@@ -402,10 +613,10 @@ static int get_side(float prev_x, float prev_y, float ray_x, float ray_y)
 }
 
 /*
-** Selects the correct wall texture (NO, SO, WE, EA) based on the wall side hit
-** and the ray direction.
+** Selects the correct wall texture (NO, SO, WE, EA) based on the wall side
+** hit and the ray direction.
 */
-static void	get_right_tex(t_hit *hit, t_game *game)
+void	get_right_tex(t_hit *hit, t_game *game)
 {
 	if (hit->side == 0)
 	{
@@ -427,9 +638,9 @@ static void	get_right_tex(t_hit *hit, t_game *game)
 ** Computes the horizontal texture coordinate (tex_x) corresponding to the
 ** wall hit position, adjusting for wall orientation and ray direction.
 */
-static void	get_tex_x(t_hit *hit)
+void	get_tex_x(t_hit *hit)
 {
-	float wall_x;
+	float	wall_x;
 
 	if (hit->side == 0)
 		wall_x = fmodf(hit->ray_y, BLOCK) / BLOCK;
@@ -437,169 +648,24 @@ static void	get_tex_x(t_hit *hit)
 		wall_x = fmodf(hit->ray_x, BLOCK) / BLOCK;
 	if (wall_x < 0)
 		wall_x += 1.0f;
-
 	hit->tex_x = (int)(wall_x * (hit->tex->width - 1));
 	if (hit->tex_x < 0)
 		hit->tex_x = 0;
 	if (hit->tex_x >= hit->tex->width)
 		hit->tex_x = hit->tex->width - 1;
-
-	if ((hit->side == 0 && hit->dir_x < 0) || (hit->side == 1 && hit->dir_y > 0))
+	if ((hit->side == 0 && hit->dir_x < 0) || (hit->side == 1
+			&& hit->dir_y > 0))
 		hit->tex_x = hit->tex->width - 1 - hit->tex_x;
-}
-
-/*
-** Draws a vertical textured wall slice on screen by mapping texture pixels
-** to the corresponding screen column between the wall's top and bottom.
-*/
-static void draw_texture_line(t_hit *hit, t_game *game)
-{
-	int line_height = hit->bottom - hit->top;
-	float step = (float)hit->tex->height / (float)line_height;
-	float tex_pos = (hit->top - WIN_H / 2.0f + line_height / 2.0f) * step;
-
-	int y = hit->top;
-	while (y < hit->bottom)
-	{
-		int tex_y = (int)tex_pos;
-
-		if (tex_y < 0)
-			tex_y = 0;
-		if (tex_y >= hit->tex->height)
-			tex_y = hit->tex->height - 1;
-
-		int index = tex_y * hit->tex->size_line + hit->tex_x * (hit->tex->bpp / 8);
-		int color = hit->tex->data[index] | (hit->tex->data[index + 1] << 8) | (hit->tex->data[index + 2] << 16);
-
-		put_pixel(hit->screen_x, y, color, game);
-
-		tex_pos += step;
-		y++;
-	}
 }
 
 /*
 ** Initializes the ray parameters for a single screen column.
 */
-static void	init_hit_ray(t_hit *hit, t_player *player, float angle, int screen_x)
+void	init_hit_ray(t_hit *hit, t_player *player, float angle, int screen_x)
 {
 	hit->ray_x = player->x;
 	hit->ray_y = player->y;
 	hit->dir_x = cos(angle);
 	hit->dir_y = sin(angle);
 	hit->screen_x = screen_x;
-}
-
-/*
-** Advances the ray step by step in the ray direction until a wall is hit
-** and records the wall side hit.
-*/
-static void cast_ray(t_hit *hit, t_game *game, float start_x, int scale)
-{
-	float cos_angle;
-	float sin_angle;
-	float prev_x;
-	float prev_y;
-
-	cos_angle = cos(start_x);
-	sin_angle = sin(start_x);
-	prev_x = hit->ray_x;
-	prev_y = hit->ray_y;
-
-	while (!touch(hit->ray_x, hit->ray_y, game))
-	{
-		if (DEBUG)
-			draw_minimap_ray(hit->ray_x, hit->ray_y, scale, game); // Use scale here
-		prev_x = hit->ray_x;
-		prev_y = hit->ray_y;
-		hit->ray_x += cos_angle;
-		hit->ray_y += sin_angle;
-	}
-	if (DEBUG)
-		return;
-	hit->side = get_side(prev_x, prev_y, hit->ray_x, hit->ray_y);
-}
-
-/*
-** Computes the projected wall height and vertical screen bounds based on the
-** corrected distance from the player to the wall hit.
-*/
-static void	compute_wall_slice(t_hit *hit, t_player *player, t_game *game)
-{
-	float dist;
-	float height;
-
-	dist = fixed_dist(player->x, player->y, hit->ray_x, hit->ray_y, game);
-	height = (BLOCK / dist) * (WIN_W / 2);
-
-	hit->top = (WIN_H - height) / 2;
-	hit->bottom = hit->top + height;
-
-	if (hit->top < 0)
-		hit->top = 0;
-	if (hit->bottom > WIN_H)
-		hit->bottom = WIN_H;
-}
-
-/*
-** Renders a single vertical screen column by casting a ray, selecting the
-** correct texture, computing the wall slice, and drawing ceiling, wall,
-** and floor pixels.
-*/
-void draw_line(t_player *player, t_game *game, float start_x, int i, int scale)
-{
-	t_hit	hit;
-	int		y;
-
-	init_hit_ray(&hit, player, start_x, i);
-	cast_ray(&hit, game, start_x, scale);
-
-	get_right_tex(&hit, game);
-	get_tex_x(&hit);
-
-	compute_wall_slice(&hit, player, game);
-
-	// CEILING
-	y = 0;
-	while (y < hit.top)
-		put_pixel(i, y++, game->ceiling_color, game);
-
-	// WALL
-	draw_texture_line(&hit, game);
-
-	// FLOOR
-	y = hit.bottom;
-	while (y < WIN_H)
-		put_pixel(i, y++, game->floor_color, game);
-}
-
-/*
-** Main rendering loop that updates player movement, clears the screen,
-** casts rays for all screen columns, and displays the final frame.
-*/
-int draw_loop(t_game *game)
-{
-	t_player *player = &game->player;
-	move_player(&game->player, game);
-	clear_image(game);
-
-	int scale = 1;
-	if (DEBUG)
-	{
-		draw_map(game, &scale);
-		draw_minimap_player(game, scale);
-	}
-
-	float fraction = PI / 3 / WIN_W;
-	float start_x = player->angle - PI / 6;
-	int i = 0;
-	while (i < WIN_W)
-	{
-		draw_line(player, game, start_x, i, scale); // Pass scale here
-		start_x += fraction;
-		i++;
-	}
-
-	mlx_put_image_to_window(game->mlx, game->win, game->img, 0, 0);
-	return (0);
 }
