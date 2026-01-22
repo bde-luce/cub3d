@@ -24,7 +24,6 @@
 
 # define WIN_W 1280
 # define WIN_H 720
-# define BLOCK 64
 # define PI 3.14159265359
 # define W 119
 # define A 97
@@ -32,6 +31,7 @@
 # define D 100
 # define LEFT 65361
 # define RIGHT 65363
+# define DDA_INF_DIST 1e30
 
 typedef struct s_tex
 {
@@ -44,24 +44,35 @@ typedef struct s_tex
 	int		height;
 }			t_tex;
 
-typedef struct s_hit
+typedef struct s_ray
 {
-	float	ray_x;
-	float	ray_y;
-	float	dir_x;
-	float	dir_y;
-	int		side;
-	t_tex	*tex;
-	int		tex_x;
-	int		screen_x;
-	int		top;
-	int		bottom;
-}			t_hit;
+	float		ray_dir_x;
+	float		ray_dir_y;
+	int			map_x;
+	int			map_y;
+	float		delta_dist_x;
+	float		delta_dist_y;
+	float		side_dist_x;
+	float		side_dist_y;
+	int			side;
+	int			step_x;
+	int			step_y;
+	bool		hit;
+	float		perp_wall_dist;
+	const t_tex	*tex;
+	int			tex_x;
+	int			draw_start;
+	int			draw_end;
+}			t_ray;
 
 typedef struct s_player
 {
 	float	x;
 	float	y;
+	float	dir_x;
+	float	dir_y;
+	float	plane_x;
+	float	plane_y;
 	float	angle;
 	bool	key_up;
 	bool	key_down;
@@ -104,42 +115,6 @@ typedef struct s_config
 	t_game	game;
 }			t_config;
 
-// INIT
-void	init_game(t_game *game, t_config *config);
-void	find_player_position(t_config *config);
-
-// MLX_UTILS
-int		rgb_to_int(char *rgb);
-void	cleanup_mlx(t_config *config);
-
-// HOOKS
-int		key_press(int keycode, t_config *config);
-int		key_release(int keycode, t_config *config);
-int		handle_close(void *param);
-
-// PLAYER
-bool	touch(float px, float py, t_game *game);
-void	move_player(t_player *player, t_game *game);
-float	distance(float x, float y);
-float	fixed_dist(t_player *p, float x2, float y2);
-void	get_move_vector(t_player *p, float *dx, float *dy);
-void	apply_move(t_player *p, t_game *game, float dx, float dy);
-
-// IMAGE
-void	put_pixel(int x, int y, int color, t_game *game);
-void	clear_image(t_game *game);
-
-// RENDERING
-int		draw_loop(t_game *game);
-void	draw_line(t_player *player, t_game *game, float start_x, int i);
-void	compute_wall_slice(t_hit *hit, t_player *player);
-int		get_side(float prev_x, float prev_y, float ray_x, float ray_y);
-void	get_right_tex(t_hit *hit, t_game *game);
-void	get_tex_x(t_hit *hit);
-void	init_hit_ray(t_hit *hit, t_player *player, float angle, int screen_x);
-void	cast_ray(t_hit *hit, t_game *game, float start_x);
-void	draw_texture_line(t_hit *hit, t_game *game);
-
 // PARSING
 // PARSING CONFIG
 void	free_arr(char **arr);
@@ -169,5 +144,43 @@ int		arr_len(char **arr);
 void	skip_pos_signal(char *str, int *i);
 void	skip_hwhitespace(char *str, int *i);
 int		count_trailing_ws(char *str);
+
+// INIT_GAME
+void	init_game(t_game *game, t_config *config);
+
+// MLX_UTILS
+int		rgb_to_int(char *rgb);
+void	cleanup_mlx(t_config *config);
+
+// HOOKS
+int		key_press(int keycode, t_config *config);
+int		key_release(int keycode, t_config *config);
+int		handle_close(void *param);
+
+// PLAYER
+// PLAYER_SETUP
+void	find_player_position(t_config *config);
+// PLAYER_MOVE
+void	move_player(t_player *player, t_game *game);
+// PLAYER_UTILS
+bool	touch(float px, float py, const t_game *game);
+
+// IMAGE
+void	put_pixel(int x, int y, int color, const t_game *game);
+void	clear_image(t_game *game);
+
+// RAY
+//RAY_SETUP
+void	get_ray_direction(t_ray *ray, const t_player *player, float x);
+void	get_ray_grid(t_ray *ray, const t_player *player);
+void	get_ray_step(t_ray *ray, const t_player *player);
+// RAY_RENDER
+void	draw_column(float x, t_ray *ray, const t_game *game);
+// RAY_CAST
+int		ray_cast(t_config *config);
+
+// RENDER_UTILS
+void	get_right_tex(t_ray *ray, const t_game *game);
+void	get_tex_x(t_ray *ray, const t_player *player);
 
 #endif

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: frteixei <frteixei@student.42.fr>          +#+  +:+       +#+        */
+/*   By: bde-luce <bde-luce@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/07 16:54:22 by frteixei          #+#    #+#             */
-/*   Updated: 2026/01/20 12:25:16 by frteixei         ###   ########.fr       */
+/*   Updated: 2026/01/21 16:16:55 by bde-luce         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,7 +31,7 @@ int	main(int argc, char **argv)
 	mlx_hook(config.game.win, 2, 1L << 0, key_press, &config);
 	mlx_hook(config.game.win, 3, 1L << 1, key_release, &config);
 	mlx_hook(config.game.win, 17, 0, handle_close, &config);
-	mlx_loop_hook(config.game.mlx, draw_loop, &config.game);
+	mlx_loop_hook(config.game.mlx, ray_cast, &config);
 	mlx_loop(config.game.mlx);
 	free_config(&config);
 	return (0);
