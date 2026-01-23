@@ -6,12 +6,15 @@
 /*   By: bde-luce <bde-luce@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/22 19:27:47 by bde-luce          #+#    #+#             */
-/*   Updated: 2026/01/22 19:50:09 by bde-luce         ###   ########.fr       */
+/*   Updated: 2026/01/23 15:54:14 by bde-luce         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../inc/cub3d.h"
 
+/*
+** Performs the DDA algorithm to find the wall hit by the ray.
+*/
 static void	perform_dda(t_ray *ray, char **map)
 {
 	while (!ray->hit)
@@ -33,6 +36,9 @@ static void	perform_dda(t_ray *ray, char **map)
 	}
 }
 
+/*
+** Computes the perpendicular distance from the player to the wall hit.
+*/
 static void	get_perp_wall_dist(t_ray *ray, t_player *player)
 {
 	if (ray->side == 0)
@@ -43,6 +49,9 @@ static void	get_perp_wall_dist(t_ray *ray, t_player *player)
 			= (ray->map_y - player->y + (1 - ray->step_y) / 2) / ray->ray_dir_y;
 }
 
+/*
+** Casts rays for each screen column and renders the scene.
+*/
 int	ray_cast(t_config *config)
 {
 	t_ray	ray;

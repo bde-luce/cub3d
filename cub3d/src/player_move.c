@@ -6,12 +6,15 @@
 /*   By: bde-luce <bde-luce@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/22 19:14:39 by bde-luce          #+#    #+#             */
-/*   Updated: 2026/01/22 19:22:23 by bde-luce         ###   ########.fr       */
+/*   Updated: 2026/01/23 15:40:02 by bde-luce         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../inc/cub3d.h"
 
+/*
+** Updates the player's viewing angle based on rotation input.
+*/
 static void	rotate_player(t_player *p)
 {
 	float	angle_speed;
@@ -27,6 +30,9 @@ static void	rotate_player(t_player *p)
 		p->angle = 2 * PI;
 }
 
+/*
+** Recalculates the player's direction and camera plane vectors.
+*/
 static void	update_player_vectors(t_player *p)
 {
 	p->dir_x = cos(p->angle);
@@ -35,6 +41,9 @@ static void	update_player_vectors(t_player *p)
 	p->plane_y = p->dir_x * 0.66;
 }
 
+/*
+** Recalculates the player's direction and camera plane vectors.
+*/
 static void	get_move_vector(t_player *p, float *dx, float *dy)
 {
 	float	speed;
@@ -48,6 +57,9 @@ static void	get_move_vector(t_player *p, float *dx, float *dy)
 	*dy = (p->dir_y * fwd - p->plane_y * side) * speed;
 }
 
+/*
+** Computes the movement vector from the current input and direction.
+*/
 static void	apply_move(t_player *p, t_game *game, float dx, float dy)
 {
 	float	new_x;
@@ -61,6 +73,9 @@ static void	apply_move(t_player *p, t_game *game, float dx, float dy)
 		p->y = new_y;
 }
 
+/*
+** Applies the movement to the player while checking for wall collisions.
+*/
 void	move_player(t_player *player, t_game *game)
 {
 	float	dx;

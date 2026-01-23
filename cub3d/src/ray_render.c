@@ -6,12 +6,15 @@
 /*   By: bde-luce <bde-luce@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/22 19:24:54 by bde-luce          #+#    #+#             */
-/*   Updated: 2026/01/22 20:04:12 by bde-luce         ###   ########.fr       */
+/*   Updated: 2026/01/23 15:59:43 by bde-luce         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../inc/cub3d.h"
 
+/*
+** Returns the color of a texture pixel at the given texture coordinates.
+*/
 static int	get_tex_color(const t_ray *ray, int tex_y)
 {
 	int	index;
@@ -23,6 +26,9 @@ static int	get_tex_color(const t_ray *ray, int tex_y)
 	return (color);
 }
 
+/*
+** Clamps a texture Y coordinate to valid bounds.
+*/
 static int	clamp_tex_y(int tex_y, int height)
 {
 	if (tex_y < 0)
@@ -32,6 +38,9 @@ static int	clamp_tex_y(int tex_y, int height)
 	return (tex_y);
 }
 
+/*
+** Draws the textured wall slice for a single screen column.
+*/
 static void	draw_texture_line(float x, t_ray *ray, const t_game *game)
 {
 	int		y;
@@ -53,6 +62,9 @@ static void	draw_texture_line(float x, t_ray *ray, const t_game *game)
 	}
 }
 
+/*
+** Draws a full vertical column including ceiling, wall, and floor.
+*/
 void	draw_column(float x, t_ray *ray, const t_game *game)
 {
 	int	line_height;

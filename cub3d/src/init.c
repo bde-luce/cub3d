@@ -3,15 +3,18 @@
 /*                                                        :::      ::::::::   */
 /*   init.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: frteixei <frteixei@student.42.fr>          +#+  +:+       +#+        */
+/*   By: bde-luce <bde-luce@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/07 16:46:58 by frteixei          #+#    #+#             */
-/*   Updated: 2026/01/20 12:27:57 by frteixei         ###   ########.fr       */
+/*   Updated: 2026/01/23 15:18:33 by bde-luce         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../inc/cub3d.h"
 
+/**
+ * Loads a texture from an XPM file into the given texture structure.
+ */
 static void	load_texture(t_game *game, t_tex *tex, char *path)
 {
 	tex->img = mlx_xpm_file_to_image(game->mlx, path,
@@ -24,6 +27,9 @@ static void	load_texture(t_game *game, t_tex *tex, char *path)
 		exit(1);
 }
 
+/**
+ * Loads a texture from an XPM file into the given texture structure.
+ */
 static void	load_all_textures(t_game *game, t_config *config)
 {
 	load_texture(game, &game->no, config->no);
@@ -32,6 +38,9 @@ static void	load_all_textures(t_game *game, t_config *config)
 	load_texture(game, &game->ea, config->ea);
 }
 
+/**
+ * Initializes the game window, image buffer, and textures.
+ */
 void	init_game(t_game *game, t_config *config)
 {
 	game->map = config->map;

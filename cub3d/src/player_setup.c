@@ -6,12 +6,16 @@
 /*   By: bde-luce <bde-luce@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/22 19:21:09 by bde-luce          #+#    #+#             */
-/*   Updated: 2026/01/22 19:21:11 by bde-luce         ###   ########.fr       */
+/*   Updated: 2026/01/23 16:10:48 by bde-luce         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../inc/cub3d.h"
 
+/*
+** Initializes the player's direction and camera plane based on spawn
+** orientation.
+*/
 static void	get_player_dir(t_player *player, char dir)
 {
 	player->dir_x = 0;
@@ -40,6 +44,9 @@ static void	get_player_dir(t_player *player, char dir)
 	}
 }
 
+/*
+** Sets the player's initial viewing angle based on spawn orientation.
+*/
 static void	get_player_angle(t_player *player, char dir)
 {
 	if (dir == 'N')
@@ -52,6 +59,9 @@ static void	get_player_angle(t_player *player, char dir)
 		player->angle = PI;
 }
 
+/*
+** Finds the player's spawn position and initializes its orientation.
+*/
 void	find_player_position(t_config *config)
 {
 	int	i;

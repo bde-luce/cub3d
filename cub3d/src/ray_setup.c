@@ -6,12 +6,15 @@
 /*   By: bde-luce <bde-luce@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/22 19:23:08 by bde-luce          #+#    #+#             */
-/*   Updated: 2026/01/22 19:50:27 by bde-luce         ###   ########.fr       */
+/*   Updated: 2026/01/23 16:03:42 by bde-luce         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../inc/cub3d.h"
 
+/*
+** Computes the ray direction for a given screen column.
+*/
 void	get_ray_direction(t_ray *ray, const t_player *player, float x)
 {
 	float	camera_x;
@@ -21,6 +24,9 @@ void	get_ray_direction(t_ray *ray, const t_player *player, float x)
 	ray->ray_dir_y = player->dir_y + player->plane_y * camera_x;
 }
 
+/*
+** Initializes the ray position on the map grid and delta distances.
+*/
 void	get_ray_grid(t_ray *ray, const t_player *player)
 {
 	ray->map_x = (int)(player->x);
@@ -35,6 +41,9 @@ void	get_ray_grid(t_ray *ray, const t_player *player)
 		ray->delta_dist_y = fabs(1 / ray->ray_dir_y);
 }
 
+/*
+** Determines the ray step direction and initial side distances.
+*/
 void	get_ray_step(t_ray *ray, const t_player *player)
 {
 	if (ray->ray_dir_x < 0)

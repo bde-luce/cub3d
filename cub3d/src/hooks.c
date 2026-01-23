@@ -2,19 +2,19 @@
 /*                                                                            */
 /*                                                        :::      ::::::::   */
 /*   hooks.c                                            :+:      :+:    :+:   */
-/*                                                    +:+ +:+
-	+:+     */
-/*   By: frteixei <frteixei@student.42.fr>          +#+  +:+
-	+#+        */
-/*                                                +#+#+#+#+#+
-	+#+           */
-/*   Created: 2026/01/15 15:52:46 by frteixei          #+#    #+#             */
-/*   Updated: 2026/01/15 15:52:46 by frteixei         ###   ########.fr       */
+/*                                                    +:+ +:+         +:+     */
+/*   By: bde-luce <bde-luce@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2026/01/23 16:08:42 by bde-luce          #+#    #+#             */
+/*   Updated: 2026/01/23 16:08:42 by bde-luce         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../inc/cub3d.h"
 
+/**
+ * Handles key press events for the player.
+ */
 int	key_press(int keycode, t_config *config)
 {
 	t_player	*player;
@@ -41,6 +41,9 @@ int	key_press(int keycode, t_config *config)
 	return (0);
 }
 
+/**
+ * Handles key press events for the player.
+ */
 int	key_release(int keycode, t_config *config)
 {
 	t_player	*player;
@@ -61,6 +64,9 @@ int	key_release(int keycode, t_config *config)
 	return (0);
 }
 
+/**
+ * Handles key press events for the player.
+ */
 int	handle_close(void *param)
 {
 	t_config	*config;

@@ -6,12 +6,15 @@
 /*   By: bde-luce <bde-luce@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/22 19:28:22 by bde-luce          #+#    #+#             */
-/*   Updated: 2026/01/22 20:10:51 by bde-luce         ###   ########.fr       */
+/*   Updated: 2026/01/23 16:08:15 by bde-luce         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../inc/cub3d.h"
 
+/*
+** Selects the correct wall texture based on ray side and direction.
+*/
 void	get_right_tex(t_ray *ray, const t_game *game)
 {
 	if (ray->side == 0)
@@ -30,6 +33,9 @@ void	get_right_tex(t_ray *ray, const t_game *game)
 	}
 }
 
+/*
+** Computes the horizontal texture coordinate for the wall hit.
+*/
 void	get_tex_x(t_ray *ray, const t_player *player)
 {
 	float	wall_x;

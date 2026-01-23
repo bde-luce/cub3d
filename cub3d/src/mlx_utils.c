@@ -2,19 +2,19 @@
 /*                                                                            */
 /*                                                        :::      ::::::::   */
 /*   mlx_utils.c                                        :+:      :+:    :+:   */
-/*                                                    +:+ +:+
-	+:+     */
-/*   By: frteixei <frteixei@student.42.fr>          +#+  +:+
-	+#+        */
-/*                                                +#+#+#+#+#+
-	+#+           */
-/*   Created: 2026/01/15 15:53:00 by frteixei          #+#    #+#             */
-/*   Updated: 2026/01/15 15:53:00 by frteixei         ###   ########.fr       */
+/*                                                    +:+ +:+         +:+     */
+/*   By: bde-luce <bde-luce@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2026/01/23 16:09:07 by bde-luce          #+#    #+#             */
+/*   Updated: 2026/01/23 16:09:07 by bde-luce         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../inc/cub3d.h"
 
+/*
+** Converts an RGB string ("R,G,B") into a single integer color value.
+*/
 int	rgb_to_int(char *rgb)
 {
 	char	**c;
@@ -34,6 +34,9 @@ int	rgb_to_int(char *rgb)
 	return (color);
 }
 
+/*
+** Converts an RGB string ("R,G,B") into a single integer color value.
+*/
 void	cleanup_mlx(t_config *config)
 {
 	if (config->game.no.img)

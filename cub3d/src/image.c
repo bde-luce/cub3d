@@ -2,19 +2,19 @@
 /*                                                                            */
 /*                                                        :::      ::::::::   */
 /*   image.c                                            :+:      :+:    :+:   */
-/*                                                    +:+ +:+
-	+:+     */
-/*   By: frteixei <frteixei@student.42.fr>          +#+  +:+
-	+#+        */
-/*                                                +#+#+#+#+#+
-	+#+           */
-/*   Created: 2026/01/15 15:52:49 by frteixei          #+#    #+#             */
-/*   Updated: 2026/01/15 15:52:49 by frteixei         ###   ########.fr       */
+/*                                                    +:+ +:+         +:+     */
+/*   By: bde-luce <bde-luce@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2026/01/23 16:08:53 by bde-luce          #+#    #+#             */
+/*   Updated: 2026/01/23 16:08:53 by bde-luce         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../inc/cub3d.h"
 
+/**
+ * Draws a pixel at the given screen coordinates with the specified color.
+ */
 void	put_pixel(int x, int y, int color, const t_game *game)
 {
 	int	index;
@@ -27,6 +27,9 @@ void	put_pixel(int x, int y, int color, const t_game *game)
 	game->data[index + 2] = (color >> 16) & 0xFF;
 }
 
+/**
+ * Draws a pixel at the given screen coordinates with the specified color.
+ */
 void	clear_image(t_game *game)
 {
 	int	y;

@@ -12,6 +12,9 @@
 
 #include "../inc/cub3d.h"
 
+/*
+** Checks whether the given position collides with a wall or is outside the map.
+*/
 bool	touch(float x, float y, const t_game *game)
 {
 	int	map_x;
@@ -27,5 +30,3 @@ bool	touch(float x, float y, const t_game *game)
 		return (true);
 	return (false);
 }
-
-// verificar se touch precisa mesmo destes checks todos

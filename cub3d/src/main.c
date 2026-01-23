@@ -6,12 +6,15 @@
 /*   By: bde-luce <bde-luce@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/07 16:54:22 by frteixei          #+#    #+#             */
-/*   Updated: 2026/01/21 16:16:55 by bde-luce         ###   ########.fr       */
+/*   Updated: 2026/01/23 15:27:08 by bde-luce         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../inc/cub3d.h"
 
+/*
+** Main function to initialize the game and start the event loop.
+*/
 int	main(int argc, char **argv)
 {
 	t_config	config;
