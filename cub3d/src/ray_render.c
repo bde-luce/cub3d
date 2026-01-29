@@ -46,14 +46,26 @@ static void	draw_texture_line(float x, t_ray *ray, const t_game *game)
 	int		y;
 	float	step;
 	float	tex_pos;
+	int		start;
+	int		end;
 
 	get_right_tex(ray, game);
 	get_tex_x(ray, &game->player);
+	
+	// Clamp drawing bounds to screen
+	start = ray->draw_start;
+	end = ray->draw_end;
+	if (start < 0)
+		start = 0;
+	if (end > WIN_H)
+		end = WIN_H;
+	
 	step = (float)ray->tex->height / (float)(ray->draw_end - ray->draw_start);
-	tex_pos = (ray->draw_start - WIN_H / 2.0f
+	tex_pos = (start - WIN_H / 2.0f
 			+ (ray->draw_end - ray->draw_start) / 2.0f) * step;
-	y = ray->draw_start;
-	while (y < ray->draw_end)
+	
+	y = start;
+	while (y < end)
 	{
 		put_pixel(x, y, get_tex_color(ray, clamp_tex_y((int)tex_pos,
 					ray->tex->height)), game);
@@ -69,15 +81,36 @@ void	draw_column(float x, t_ray *ray, const t_game *game)
 {
 	int	line_height;
 	int	y;
+	int	ceiling_end;
+	int	floor_start;
 
 	line_height = WIN_H / ray->perp_wall_dist;
 	ray->draw_start = WIN_H / 2 - line_height / 2;
 	ray->draw_end = WIN_H / 2 + line_height / 2;
+	
+	// Clamp ceiling/floor rendering bounds
+	ceiling_end = ray->draw_start;
+	if (ceiling_end < 0)
+		ceiling_end = 0;
+	if (ceiling_end > WIN_H)
+		ceiling_end = WIN_H;
+	
+	floor_start = ray->draw_end;
+	if (floor_start < 0)
+		floor_start = 0;
+	if (floor_start > WIN_H)
+		floor_start = WIN_H;
+	
+	// Draw ceiling
 	y = 0;
-	while (y < ray->draw_start)
+	while (y < ceiling_end)
 		put_pixel(x, y++, game->ceiling_color, game);
+	
+	// Draw textured wall
 	draw_texture_line(x, ray, game);
-	y = ray->draw_end;
+	
+	// Draw floor
+	y = floor_start;
 	while (y < WIN_H)
 		put_pixel(x, y++, game->floor_color, game);
 }

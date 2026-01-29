@@ -21,7 +21,7 @@ int	main(int argc, char **argv)
 
 	if (argc != 2)
 	{
-		write(2, "Error\nUsage: ./cub3d map.cub\n", 29);
+		write(2, "Error\nUsage: ./cub3d maps/map.cub\n", 33);
 		return (1);
 	}
 	ft_bzero(&config, sizeof(t_config));
